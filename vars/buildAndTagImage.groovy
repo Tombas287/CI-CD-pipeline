@@ -3,4 +3,3 @@ def call(String dockerTag) {
     sh "docker build -t ${dockerTag} ."
 }
 
-}
