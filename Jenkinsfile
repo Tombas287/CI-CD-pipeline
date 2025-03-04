@@ -42,13 +42,13 @@ pipeline {
 
         }
 
-        // stage('sonar scan'){
-        //     steps {
-        //         sonarScan(projectKey: 'my_local_project',  
-        //             sonarHost: 'http://host.docker.internal:9000',
-        //             sonarToken: 'sqp_f67815ea0729830d5b00a48de2a30853c8c839a5')
-        //     }
-        // }
+        stage('sonar scan'){
+            steps {
+                sonarScan(projectKey: 'my_local_project',  
+                    sonarHost: 'http://host.docker.internal:9000',
+                    sonarToken: 'sqp_f67815ea0729830d5b00a48de2a30853c8c839a5')
+            }
+        }
         stage('check if image exist'){
 
             steps {
@@ -121,7 +121,7 @@ pipeline {
     post {
         success {
             script {
-                sh "docker rmi -f ${env.DOCKER_IMAGE}:${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
+                sh "docker rmi -f ${env.USERNAME}/${env.DOCKER_IMAGE}:${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
             }
         }
         failure {
