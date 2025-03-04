@@ -22,11 +22,14 @@ def call(Map config = [:]) {
 
         // Run SonarScanner in Docker
         sh """
-        docker run --rm -v "\$(pwd):/usr/src" sonarsource/sonar-scanner-cli \\
-            -Dsonar.projectKey=${projectKey} \\
-            -Dsonar.sources=. \\
-            -Dsonar.host.url=${sonarHost} \\
+        docker run --rm -v "$(pwd):/usr/src" sonarsource/sonar-scanner-cli \
+            -Dsonar.projectKey=${projectKey} \
+            -Dsonar.exclusions="**/node_modules/**, **/tests/**, **/*.spec.js, **/*.min.js, **/build/**" \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=${sonarHost} \
+            -Dsonar.scm.disabled=true \
             -Dsonar.login=${sonarToken}
+
         """
     }
 }
