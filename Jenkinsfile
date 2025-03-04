@@ -44,3 +44,14 @@ pipeline {
 
 
 }
+post {
+
+    success {
+        sh "rm -rf ${env.DOCKER_IMAGE}:${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
+    }
+    failure {
+        echo "build failed"
+
+    }
+
+}
