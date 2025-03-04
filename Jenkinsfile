@@ -7,6 +7,7 @@ pipeline {
         DOCKER_IMAGE = 'myapp'
         DOCKER_HOST = "unix:///var/run/docker.sock"
         PATH = "/opt/homebrew/bin:/usr/local/bin:$PATH"
+        USERNAME = "7002370412"
         ENVIRONMENT = 'dev'
     }
 
@@ -28,7 +29,7 @@ pipeline {
         stage('Build and Tag Docker Image') {
             steps {
                 script {
-                    def dockerTag = "${env.DOCKER_IMAGE}:${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
+                    def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
                     sh "docker build -t ${dockerTag} ."
                 }
             }
