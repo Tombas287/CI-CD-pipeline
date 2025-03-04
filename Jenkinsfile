@@ -25,6 +25,32 @@ pipeline {
                 }
             }
         }
+        stage('check if image exist'){
+
+            steps {
+
+                script {
+                    def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
+                    def dockerTag = "${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
+
+                    def exist = imageExist(dockerImage, imageTag)
+                    if (exists) {
+                        echo "Skipping build because image already exists."
+                        currentBuild.result = 'SUCCESS'
+                        return
+                    } else {
+                        echo "No existing image found. Proceeding with build."
+                    }
+
+
+                    }
+
+                }
+
+
+            }
+
+        }
 
         stage('Build and Tag Docker Image') {
             steps {
