@@ -53,6 +53,7 @@ pipeline {
             }
 
         stage('Build and Tag Docker Image') {
+            when { expression { currentBuild.result == null } }
             steps {
                 script {
                     def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
@@ -62,7 +63,7 @@ pipeline {
         
         }
         stage('Docker push to registry'){
-
+            when { expression { currentBuild.result == null } }
             steps {
                 script {
                     def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
