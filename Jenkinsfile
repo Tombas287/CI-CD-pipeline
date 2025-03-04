@@ -30,10 +30,27 @@ pipeline {
             steps {
                 script {
                     def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
-                    sh "docker build -t ${dockerTag} ."
+                    buildAndTagImage(dockerTag)
                 }
             }
+        
         }
+        stage('Docker push to registry'){
+
+            steps {
+                script {
+                    def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
+                    dockerPush(dockerTag)
+                }
+
+
+            }
+
+
+        }
+
+
+
     }
 
     post {
