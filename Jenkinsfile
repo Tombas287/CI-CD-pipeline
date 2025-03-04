@@ -9,6 +9,7 @@ pipeline {
         PATH = "/opt/homebrew/bin:/usr/local/bin:$PATH"
         USERNAME = "7002370412"
         ENVIRONMENT = 'dev'
+
     }
 
     stages {
@@ -23,6 +24,13 @@ pipeline {
                 script {
                     env.GIT_COMMIT_SHA = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
                 }
+            }
+        }
+        stage('sonar scan'){
+            steps {
+                sonarScan(projectKey: 'my_local_project',  
+                    sonarHost: 'http://localhost:9000',
+                    sonarToken: 'sqp_f67815ea0729830d5b00a48de2a30853c8c839a5')
             }
         }
         stage('check if image exist'){
