@@ -13,8 +13,7 @@ RUN python3 -m venv /opt/venv
 
 ENV PATH="/opt/venv/bin:$PATH"
 
-RUN pip install --upgrade pip \
-    && pip install -r requirements.txt
+RUN pip install -r requirements.txt
 
 RUN addgroup --system admingroup \
     && adduser --system --ingroup admingroup adminuser \
