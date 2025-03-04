@@ -52,8 +52,6 @@ pipeline {
 
             }
 
-        }
-
         stage('Build and Tag Docker Image') {
             steps {
                 script {
