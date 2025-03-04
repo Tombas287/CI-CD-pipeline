@@ -1,57 +1,48 @@
 @Library('my-shared-library') _
 
 pipeline {
+    agent { label 'azure' }
 
-    agent { label 'azure'}
     environment {
         DOCKER_IMAGE = 'myapp'
         DOCKER_HOST = "unix:///var/run/docker.sock"
         PATH = "/opt/homebrew/bin:/usr/local/bin:$PATH"
-        GIT_COMMIT_SHA = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
         ENVIRONMENT = 'dev'
-
     }
-    stages {
-        stage('Checkout code'){
-            steps {
-                echo "hello world"
-            }
 
+    stages {
+        stage('Checkout Code') {
+            steps {
+                echo "Hello, world!"
+            }
         }
-        stage('Build and Tag Docker Image'){
+
+        stage('Set Commit SHA') {
+            steps {
+                script {
+                    env.GIT_COMMIT_SHA = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                }
+            }
+        }
+
+        stage('Build and Tag Docker Image') {
             steps {
                 script {
                     def dockerTag = "${env.DOCKER_IMAGE}:${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
-                    buildAndTagImage(dockerTag)
-
-
-
-                } 
-
-
+                    sh "docker build -t ${dockerTag} ."
+                }
             }
-
-
-
         }
-
-
-
-
     }
 
-
-
-
-}
-post {
-
-    success {
-        sh "docker rmi -f ${env.DOCKER_IMAGE}:${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
+    post {
+        success {
+            script {
+                sh "docker rmi -f ${env.DOCKER_IMAGE}:${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
+            }
+        }
+        failure {
+            echo "Build failed"
+        }
     }
-    failure {
-        echo "build failed"
-
-    }
-
 }
