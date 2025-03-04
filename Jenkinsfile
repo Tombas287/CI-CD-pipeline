@@ -31,7 +31,7 @@ pipeline {
                 script {
                     pipBuilder( pythonVersion: 'python3.10',
                     requirementsFile: 'requirements.txt',
-                    outputDir: 'build_output/'
+                    outputDir: 'build_output/',
                     venvDir: 'venv'
                     )
 
