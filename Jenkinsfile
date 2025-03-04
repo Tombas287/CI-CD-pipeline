@@ -36,7 +36,7 @@ pipeline {
                     def imageTag = "latest"
 
                     def exist = imageExist(dockerImage, imageTag)
-                    if (exists) {
+                    if (exist) {
                         echo "Skipping build because image already exists."
                         currentBuild.result = 'SUCCESS'
                         return
