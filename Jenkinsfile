@@ -21,7 +21,7 @@ pipeline {
         stage('Build and Tag Docker Image'){
             steps {
                 script {
-                    def dockerTag = "${DOCKER_IMAGE}:${ENVIRONMENT}-${GIT_COMMIT_SHA}"
+                    def dockerTag = "${env.DOCKER_IMAGE}:${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
                     buildAndTagImage(dockerTag)
 
 
