@@ -29,7 +29,7 @@ pipeline {
         stage('sonar scan'){
             steps {
                 sonarScan(projectKey: 'my_local_project',  
-                    sonarHost: 'http://localhost:9000',
+                    sonarHost: 'http://host.docker.internal:9000',
                     sonarToken: 'sqp_f67815ea0729830d5b00a48de2a30853c8c839a5')
             }
         }
