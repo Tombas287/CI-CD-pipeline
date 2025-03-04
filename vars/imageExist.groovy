@@ -4,7 +4,7 @@ def call(String dockerImage, String imageTag){
     def imageExist = false
     try {
 
-        def status = sh(script: "curl -s -f https://hub.docker.com/v2/repositories/${dockerImage}/tags/${imageTag}", returnStatus: true)
+        def status = sh(script: "curl -s -f https://hub.docker.com/v2/repositories/${dockerImage}/tags/${imageTag} > /dev/null 2>&1; echo $?", returnStatus: true)
         if (status == 0) {
             echo "Image exist"
             imageExist = true
