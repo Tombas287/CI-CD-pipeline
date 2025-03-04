@@ -3,7 +3,7 @@ def call(String dockerImage) {
     
     // Log in to Docker registry
     withCredentials([usernamePassword(credentialsId: 'docker_login', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-        sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
+        sh "docker login -u ${DOCKER_USERNAME} --password-stdin"
     }
     
     // Push the Docker image
