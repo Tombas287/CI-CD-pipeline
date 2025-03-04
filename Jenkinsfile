@@ -1,4 +1,4 @@
-@Library('my-shared-library') _
+@library("my-shared-library") _
 
 pipeline {
 
@@ -23,6 +23,7 @@ pipeline {
                 script {
                     def dockerTag = "${env.DOCKER_IMAGE}:${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
                     buildAndTagImage(dockerTag)
+
 
 
                 } 
