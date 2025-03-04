@@ -4,8 +4,8 @@ pipeline {
 
     agent { label 'azure'}
     environment {
-        DOKCER_IMAGE = "myapp"
-        GIT_COMMIT_SHA = sh(script: 'git rev-parse --short HEAD , returnStdout: true).trim()')
+        DOCKER_IMAGE = 'myapp'
+        GIT_COMMIT_SHA = sh(script: 'git rev-parse --short HEAD' , returnStdout: true).trim())
         ENVIRONMENT = 'dev'
 
     }
@@ -19,7 +19,7 @@ pipeline {
         stage('Build and Tag Docker Image'){
             steps {
                 script {
-                    def dockerTag = "${DOKCER_IMAGE}:${ENVIRONMENT}-${GIT_COMMIT_SHA}"
+                    def dockerTag = "${DOCKER_IMAGE}:${ENVIRONMENT}-${GIT_COMMIT_SHA}"
                     buildAndTagImage(dockerTag)
 
 
