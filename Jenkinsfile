@@ -30,8 +30,10 @@ pipeline {
             steps {
 
                 script {
-                    def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
-                    def dockerTag = "${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
+                    // def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
+                    // def imageTag = "${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
+                    def dockerImage = "7002370412/nginx"
+                    def imageTag = "latest"
 
                     def exist = imageExist(dockerImage, imageTag)
                     if (exists) {
