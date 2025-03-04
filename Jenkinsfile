@@ -26,6 +26,21 @@ pipeline {
                 }
             }
         }
+        stage('Pip Builder'){
+            steps {
+                script {
+                    pipBuilder( pythonVersion: 'python3.9',
+                    requirementsFile: 'requirements.txt',
+                    outputDir: 'build_output/'
+                    )
+
+                }
+
+            }
+
+
+        }
+
         stage('sonar scan'){
             steps {
                 sonarScan(projectKey: 'my_local_project',  
