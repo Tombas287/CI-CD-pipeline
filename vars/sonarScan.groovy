@@ -5,7 +5,7 @@ def call(Map config = [:]) {
 
     script {
         sh """
-        docker run --rm -v "\$(pwd):/usr/src" sonarsource/sonar-scanner-cli \\
+        sonar-scanner \
             -Dsonar.projectKey=${projectKey} \\
             -Dsonar.sources=. \\
             -Dsonar.host.url=${sonarHost} \\
