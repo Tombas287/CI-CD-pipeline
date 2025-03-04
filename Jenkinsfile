@@ -100,19 +100,19 @@ pipeline {
 
 
         }
-        // stage('Docker push to registry'){
-        //     when { expression { currentBuild.result == null } }
-        //     steps {
-        //         script {
-        //             def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
-        //             dockerPush(dockerTag)
-        //         }
+        stage('Docker push to registry'){
+            when { expression { currentBuild.result == null } }
+            steps {
+                script {
+                    def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
+                    dockerPush(dockerTag)
+                }
 
 
-        //     }
+            }
 
 
-        // }
+        }
 
 
 
