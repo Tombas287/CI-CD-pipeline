@@ -29,7 +29,7 @@ pipeline {
         stage('Pip Builder'){
             steps {
                 script {
-                    pipBuilder( pythonVersion: 'python3.9',
+                    pipBuilder( pythonVersion: 'python3.10',
                     requirementsFile: 'requirements.txt',
                     outputDir: 'build_output/'
                     )
