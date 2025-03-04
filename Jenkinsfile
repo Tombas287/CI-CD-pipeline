@@ -46,7 +46,7 @@ pipeline {
             steps {
                 sonarScan(projectKey: 'my_local_project',  
                     sonarHost: 'http://host.docker.internal:9000',
-                    sonarToken: 'sqp_f67815ea0729830d5b00a48de2a30853c8c839a5')
+                    sonarToken: 'squ_47db08e5204a2a4342df98f656885aa1302de37f')
             }
         }
         stage('check if image exist'){
