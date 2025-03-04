@@ -5,7 +5,7 @@ pipeline {
     agent { label 'azure'}
     environment {
         DOCKER_IMAGE = 'myapp'
-        GIT_COMMIT_SHA = sh(script: 'git rev-parse --short HEAD' , returnStdout: true).trim())
+        GIT_COMMIT_SHA = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
         ENVIRONMENT = 'dev'
 
     }
