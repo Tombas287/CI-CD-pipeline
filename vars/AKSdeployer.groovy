@@ -17,7 +17,7 @@ def call(String environment, String credentials, String dockerImage , String ima
             }
             // Run Helm with the correct image tag
             sh """
-            helm upgrade --install my-release ./helm-chart \
+            helm upgrade --install my-release myrelease \
                 --set image.repository=${dockerImage} \
                 --set image.tag=${imageTag}
            """
