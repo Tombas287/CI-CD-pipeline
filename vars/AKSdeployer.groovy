@@ -1,5 +1,5 @@
 def call(String environment, String credentials) {
-    withCredentials([file(credentialsId: kubeconfig1, variable: 'KUBECONFIG')]) {
+    withCredentials([file(credentialsId: credentials, variable: 'KUBECONFIG')]) {
         script {
             echo "✅ Setting KUBECONFIG..."
             sh """
