@@ -17,7 +17,7 @@ pipeline {
         ENVIRONMENT = 'dev'     
 
     }
-
+stages {
     stage('Set Commit SHA') {
             steps {
                 script {
@@ -25,8 +25,8 @@ pipeline {
                 }
             }
         }
-
-    stages {
+    
+    
         stage('Checkout Code') {
             steps {
                 script {
