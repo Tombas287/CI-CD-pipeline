@@ -1,12 +1,13 @@
 @Library('my-shared-library') _
 
 pipeline {
-    agent {
-         docker {
-      image 'abhishekf5/maven-abhishek-docker-agent:v1'
-      args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
-    }     
-}
+    agent any
+    // agent {
+    //      docker {
+    //   image 'abhishekf5/maven-abhishek-docker-agent:v1'
+    //   args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
+    // }     
+// }
 
     environment {
         DOCKER_IMAGE = 'myapp'
@@ -14,13 +15,14 @@ pipeline {
         // PATH = "/opt/homebrew/bin:/usr/local/bin:$PATH"
         USERNAME = ""
         ENVIRONMENT = 'dev'
+        kubeconfig = credentials('kubeconfig1')
 
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                echo "Hello, world!"
+                AKSdeployer('dev', kubeconfig) 
             }
         }
 
