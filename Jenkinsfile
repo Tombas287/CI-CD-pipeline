@@ -21,7 +21,11 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                AKSdeployer('dev', 'kubeconfig1') 
+                script {
+                    def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
+                    def imageTag = "${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
+                    AKSdeployer('dev', 'kubeconfig1',dockerImage, imageTag )
+                }
             }
         }
 
