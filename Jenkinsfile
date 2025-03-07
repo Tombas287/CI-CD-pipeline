@@ -14,15 +14,14 @@ pipeline {
         // DOCKER_HOST = "unix:///var/run/docker.sock"
         // PATH = "/opt/homebrew/bin:/usr/local/bin:$PATH"
         USERNAME = ""
-        ENVIRONMENT = 'dev'
-        kubeconfig = credentials('kubeconfig1')
+        ENVIRONMENT = 'dev'     
 
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                AKSdeployer('dev', kubeconfig) 
+                AKSdeployer('dev', 'kubeconfig1') 
             }
         }
 
