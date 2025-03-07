@@ -12,15 +12,16 @@ def call(String environment, String credentials, String dockerImage , String ima
 
             if (imageExists) {
                 echo "✅ Image exists. Deploying existing image..."
+                sh """
+                    helm upgrade --install my-release myrelease \
+                        --set image.repository=${dockerImage} \
+                        --set image.tag=${imageTag}
+           """
             } else {
-                echo "🚀 Image not found. Deploying latest build..."
+                echo "🚀 Image not found..."
             }
             // Run Helm with the correct image tag
-            sh """
-            helm upgrade --install my-release myrelease \
-                --set image.repository=${dockerImage} \
-                --set image.tag=${imageTag}
-           """
+
         }
     }
 }
