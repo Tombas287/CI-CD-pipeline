@@ -13,10 +13,18 @@ pipeline {
         DOCKER_IMAGE = 'myapp'
         // DOCKER_HOST = "unix:///var/run/docker.sock"
         PATH = "/opt/homebrew/bin:/usr/local/bin:$PATH"
-        USERNAME = ""
+        USERNAME = "7002370412"
         ENVIRONMENT = 'dev'     
 
     }
+
+    stage('Set Commit SHA') {
+            steps {
+                script {
+                    env.GIT_COMMIT_SHA = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                }
+            }
+        }
 
     stages {
         stage('Checkout Code') {
