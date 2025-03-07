@@ -21,7 +21,6 @@ def call(String environment, String credentials, String dockerImage , String ima
                 --set image.repository=${dockerImage} \
                 --set image.tag=${imageTag}
            """
-           }
         }
     }
 }
