@@ -1,12 +1,17 @@
 @Library('my-shared-library') _
 
 pipeline {
-    agent { label 'azure' }
+    agent {
+         docker {
+      image 'abhishekf5/maven-abhishek-docker-agent:v1'
+      args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
+    }     
+}
 
     environment {
         DOCKER_IMAGE = 'myapp'
-        DOCKER_HOST = "unix:///var/run/docker.sock"
-        PATH = "/opt/homebrew/bin:/usr/local/bin:$PATH"
+        // DOCKER_HOST = "unix:///var/run/docker.sock"
+        // PATH = "/opt/homebrew/bin:/usr/local/bin:$PATH"
         USERNAME = ""
         ENVIRONMENT = 'dev'
 
