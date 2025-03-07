@@ -5,6 +5,7 @@ def call(String environment, String credentials) {
             sh """
             export KUBECONFIG=\$KUBECONFIG
             kubectl config get-contexts
+            helm --version
             """
         }
     }
