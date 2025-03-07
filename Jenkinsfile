@@ -12,7 +12,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'myapp'
         // DOCKER_HOST = "unix:///var/run/docker.sock"
-        // PATH = "/opt/homebrew/bin:/usr/local/bin:$PATH"
+        PATH = "/opt/homebrew/bin:/usr/local/bin:$PATH"
         USERNAME = ""
         ENVIRONMENT = 'dev'     
 
