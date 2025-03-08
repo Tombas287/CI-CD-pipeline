@@ -48,8 +48,8 @@ stages {
         stage('sonar scan'){
             steps {
                 sonarScan(projectKey: 'my_local_project',  
-                    // sonarHost: 'http://host.docker.internal:9000',           
-                    sonarHost: 'http://localhost:9000' ,  
+                    sonarHost: 'http://host.docker.internal:9000',           
+                    // sonarHost: 'http://localhost:9000' ,  
                     sonarToken: 'sqp_b69e9b6fdb91dd83c1f0a86674e407c29e35ab30')
             }
         }
