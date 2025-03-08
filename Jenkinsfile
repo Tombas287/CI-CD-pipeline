@@ -30,8 +30,9 @@ stages {
         stage('Checkout Code') {
             steps {
                 script {
+
                     def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
-                    def imageTag = "${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
+                    def imageTag = "${env.GIT_COMMIT_SHA}"
                     AKSdeployer('dev', 'kubeconfig1',dockerImage, imageTag )
                 }
             }
@@ -99,7 +100,7 @@ stages {
         //     when { expression { currentBuild.result == null } }
         //     steps {
         //         script {
-        //             def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
+        //             def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
         //             buildAndTagImage(dockerTag)
         //         }
         //     }
@@ -110,7 +111,7 @@ stages {
             // steps {
         //     script {
 
-        //         def imageTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
+        //         def imageTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
         //         imageScan(imageTag)
         //     }
 
@@ -123,7 +124,7 @@ stages {
         //     when { expression { currentBuild.result == null } }
         //     steps {
         //         script {
-        //             def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
+        //             def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
         //             dockerPush(dockerTag)
         //         }
 
@@ -140,7 +141,7 @@ stages {
     post {
         success {
             script {
-                sh "docker rmi -f ${env.USERNAME}/${env.DOCKER_IMAGE}:${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
+                sh "docker rmi -f ${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
             }
         }
         failure {
