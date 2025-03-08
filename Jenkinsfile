@@ -136,16 +136,16 @@ stages {
                 }
             }
         }
-        stage('Aks deployer prod') {
-            steps {
-                script {
+        //stage('Aks deployer prod') {
+        //    steps {
+        //        script {
 
-                    def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
-                    def imageTag = "${env.GIT_COMMIT_SHA}"
-                    AKSdeployer('prod', 'kubeconfig1',dockerImage, imageTag )
-                }
-            }
-        }
+        //            def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
+        //            def imageTag = "${env.GIT_COMMIT_SHA}"
+        //            AKSdeployer('prod', 'kubeconfig1',dockerImage, imageTag )
+         //       }
+        //    }
+       // }
 
     }
 

@@ -12,9 +12,9 @@ def call(String environment, String credentials, String dockerImage , String ima
             def nonProdEnv = ["dev", "preprod", "qa"]
             if (environment == "prod") {
                 if (imageExist) {
-                    echo "✅ Image exists. Deploying to PROD..."
+                    echo "✅ Image exists.deploying to ${environment}"
                     sh """
-                        helm upgrade --install my-release myrelease \
+                        helm --install my-release myrelease \
                             --set image.repository=${dockerImage} \
                             --set image.tag=${imageTag}
                     """
@@ -26,7 +26,7 @@ def call(String environment, String credentials, String dockerImage , String ima
                }
             } else if (nonProdEnv.contains(environment)) {
                 if (imageExists){
-                echo "✅ Image exists. Deploying existing image to prod."
+                echo "✅ Image exists. Deploying existing image to ${environment}."
                 sh """
                     helm upgrade --install my-release myrelease \
                         --set image.repository=${dockerImage} \
