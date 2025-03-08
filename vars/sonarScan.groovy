@@ -28,7 +28,6 @@ def call(Map config = [:]) {
             -Dsonar.sources=. \
             -Dsonar.host.url=${sonarHost} \
             -Dsonar.scm.disabled=true \
-            -Dsonar.login=${sonarToken} \
             -Dsonar.verbose=true
         """
     }

@@ -107,7 +107,7 @@ stages {
         // }
 
         // stage('Image scan'){
-        // steps {
+            // steps {
         //     script {
 
         //         def imageTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"

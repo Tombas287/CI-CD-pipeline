@@ -19,6 +19,12 @@ def call(String environment, String credentials, String dockerImage , String ima
            """
             } else {
                 echo "🚀 Image not found..."
+                sh """
+                helm install  my-release  \
+                --set image.repository=${dockerImage} \
+                --set image.tag=${imageTag}
+
+                """
             }
             // Run Helm with the correct image tag
 
