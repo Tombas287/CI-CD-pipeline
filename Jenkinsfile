@@ -45,13 +45,13 @@ stages {
          //    }
          // }
 
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    sonarScan(projectKey: 'my_local_project', sonarHost: 'http://host.docker.internal:9000')
-                }
-            }
-        }
+        // stage('SonarQube Analysis') {
+        //     steps {
+        //         script {
+        //             sonarScan(projectKey: 'my_local_project', sonarHost: 'http://host.docker.internal:9000')
+        //         }
+        //     }
+        // }
         // stage('check if image exist'){
 
         //     steps {
@@ -79,43 +79,43 @@ stages {
 
         //     }
 
-        stage('Build and Tag Docker Image') {
-            when { expression { currentBuild.result == null } }
-             steps {
-                 script {
-                     def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
-                     buildAndTagImage(dockerTag)
-                 }
-             }
-         }
+        // stage('Build and Tag Docker Image') {
+        //     when { expression { currentBuild.result == null } }
+        //      steps {
+        //          script {
+        //              def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
+        //              buildAndTagImage(dockerTag)
+        //          }
+        //      }
+        //  }
 
-         stage('Image scan'){
-             steps {
-            script {
-                def imageTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
-                 imageScan(imageTag)
-             }
-           }
-         }
-        stage('Docker push to registry'){
-            when { expression { currentBuild.result == null } }
-            steps {
-                script {
-                    def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
-                    dockerPush(dockerTag)
-                }
-            }
-        }
-        stage('Aks deployer Dev') {
-            steps {
-                script {
+         // stage('Image scan'){
+         //     steps {
+         //    script {
+         //        def imageTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
+         //         imageScan(imageTag)
+         //     }
+         //   }
+         // }
+        // stage('Docker push to registry'){
+        //     when { expression { currentBuild.result == null } }
+        //     steps {
+        //         script {
+        //             def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
+        //             dockerPush(dockerTag)
+        //         }
+        //     }
+        // }
+        // stage('Aks deployer Dev') {
+        //     steps {
+        //         script {
 
-                    def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
-                    def imageTag = "${env.GIT_COMMIT_SHA}"
-                    AKSdeployer('dev', 'kubeconfig1',dockerImage, imageTag )
-                }
-            }
-        }
+        //             def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
+        //             def imageTag = "${env.GIT_COMMIT_SHA}"
+        //             AKSdeployer('dev', 'kubeconfig1',dockerImage, imageTag )
+        //         }
+        //     }
+        // }
         stage('Aks deployer qa') {
             steps {
                 script {
