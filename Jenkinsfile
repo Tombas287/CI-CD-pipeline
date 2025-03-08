@@ -48,7 +48,7 @@ stages {
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    call(projectKey: 'my_local_project', sonarHost: 'http://host.docker.internal:9000')
+                    sonarScan(projectKey: 'my_local_project', sonarHost: 'http://host.docker.internal:9000')
                 }
             }
         }
