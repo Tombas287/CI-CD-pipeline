@@ -12,7 +12,7 @@ def call(Map config = [:]) {
     script {
         withCredentials([string(credentialsId: 'sonar-token-id', variable: 'SONAR_TOKEN')]) {
             // Check if SonarQube is running
-            def sonarStatus = sh(script: "docker inspect -f '{{.State.Running}}' sonarqube || echo 'not running'", returnStdout: true).trim()
+            def sonarStatus = sh(script: "docker inspect -f '{{.State.Running}}' sonar || echo 'not running'", returnStdout: true).trim()
         
             if (sonarStatus != 'true') {
                 error("🚨 SonarQube is NOT running! Start it first using: docker start sonarqube")
