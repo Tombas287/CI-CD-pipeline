@@ -53,7 +53,7 @@ stages {
                     sonarToken: 'squ_69cc8d8c9a23445460d9ee1562732fff8133e64b')
             }
         }
-        stage('check if image exist'){
+        // stage('check if image exist'){
 
         //     steps {
 
