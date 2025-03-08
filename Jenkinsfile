@@ -27,13 +27,43 @@ stages {
         }
     
     
-        stage('Checkout Code') {
+        stage('Aks deployer Dev') {
             steps {
                 script {
 
                     def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
                     def imageTag = "${env.GIT_COMMIT_SHA}"
                     AKSdeployer('dev', 'kubeconfig1',dockerImage, imageTag )
+                }
+            }
+        }
+        stage('Aks deployer qa') {
+            steps {
+                script {
+
+                    def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
+                    def imageTag = "${env.GIT_COMMIT_SHA}"
+                    AKSdeployer('qa', 'kubeconfig1',dockerImage, imageTag )
+                }
+            }
+        }
+        stage('Aks deployer preprod') {
+            steps {
+                script {
+
+                    def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
+                    def imageTag = "${env.GIT_COMMIT_SHA}"
+                    AKSdeployer('preprod', 'kubeconfig1',dockerImage, imageTag )
+                }
+            }
+        }
+        stage('Aks deployer prod') {
+            steps {
+                script {
+
+                    def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
+                    def imageTag = "${env.GIT_COMMIT_SHA}"
+                    AKSdeployer('prod', 'kubeconfig1',dockerImage, imageTag )
                 }
             }
         }
