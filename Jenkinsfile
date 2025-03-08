@@ -122,7 +122,7 @@ stages {
 
                     def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
                     def imageTag = "${env.GIT_COMMIT_SHA}"
-                    AKSdeployer('qa', 'kubeconfig1',dockerImage, imageTag )
+                    AKSdeployer('qa', 'credentials',dockerImage, imageTag )
                 }
             }
         }
@@ -132,7 +132,7 @@ stages {
 
                     def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
                     def imageTag = "${env.GIT_COMMIT_SHA}"
-                    AKSdeployer('preprod', 'kubeconfig1',dockerImage, imageTag )
+                    AKSdeployer('preprod', 'credentials',dockerImage, imageTag )
                 }
             }
         }
@@ -147,7 +147,7 @@ stages {
                        if (userInput) {
                                def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
                                def imageTag = "${env.GIT_COMMIT_SHA}"
-                               AKSdeployer('prod', 'kubeconfig1',dockerImage, imageTag )
+                               AKSdeployer('prod', 'credentials',dockerImage, imageTag )
                        }
                        else {
                           error("Deployment aborted by user.")
