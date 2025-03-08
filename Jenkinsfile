@@ -50,7 +50,7 @@ stages {
                 sonarScan(projectKey: 'my_local_project',  
                     sonarHost: 'http://host.docker.internal:9000',           
                     // sonarHost: 'http://localhost:9000' ,  
-                    sonarToken: 'sqp_b69e9b6fdb91dd83c1f0a86674e407c29e35ab30')
+                    sonarToken: 'sqp_c1f737fb526a01da64263d025e86201f7804435e')
             }
         }
         // stage('check if image exist'){
