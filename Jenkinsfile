@@ -45,15 +45,15 @@ stages {
             }
          }
 
-        // stage('sonar scan'){
-        //     steps {
-        //         sonarScan(projectKey: 'my_local_project',  
-        //             // sonarHost: 'http://host.docker.internal:9000',           
-        //             sonarHost: 'http://52.237.73.129:9000' ,  
-        //             sonarToken: 'sqp_9885c0ee5640367e19df2fc153755b8f7840ede7')
-        //     }
-        // }
-        // stage('check if image exist'){
+        stage('sonar scan'){
+            steps {
+                sonarScan(projectKey: 'my_local_project',  
+                    sonarHost: 'http://host.docker.internal:9000',           
+                    // sonarHost: 'http://52.237.73.129:9000' ,  
+                    sonarToken: 'squ_69cc8d8c9a23445460d9ee1562732fff8133e64b')
+            }
+        }
+        stage('check if image exist'){
 
         //     steps {
 
