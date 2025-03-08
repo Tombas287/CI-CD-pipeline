@@ -79,33 +79,33 @@ stages {
 
         //     }
 
-        stage('Build and Tag Docker Image') {
-            when { expression { currentBuild.result == null } }
-             steps {
-                 script {
-                     def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
-                     buildAndTagImage(dockerTag)
-                 }
-             }
-         }
+        // stage('Build and Tag Docker Image') {
+        //     when { expression { currentBuild.result == null } }
+        //      steps {
+        //          script {
+        //              def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
+        //              buildAndTagImage(dockerTag)
+        //          }
+        //      }
+        //  }
 
-         stage('Image scan'){
-             steps {
-            script {
-                def imageTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
-                 imageScan(imageTag)
-             }
-           }
-         }
-        stage('Docker push to registry'){
-            when { expression { currentBuild.result == null } }
-            steps {
-                script {
-                    def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
-                    dockerPush(dockerTag)
-                }
-            }
-        }
+         // stage('Image scan'){
+         //     steps {
+         //    script {
+         //        def imageTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
+         //         imageScan(imageTag)
+         //     }
+         //   }
+         // }
+        // stage('Docker push to registry'){
+        //     when { expression { currentBuild.result == null } }
+        //     steps {
+        //         script {
+        //             def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
+        //             dockerPush(dockerTag)
+        //         }
+        //     }
+        // }
         // stage('Aks deployer Dev') {
         //     steps {
         //         script {
@@ -121,7 +121,7 @@ stages {
                 script {
 
                     def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
-                    def imageTag = "${env.GIT_COMMIT_SHA}"
+                    def imageTag = "bfca98a"
                     AKSdeployer('qa', 'credentials',dockerImage, imageTag )
                 }
             }
@@ -131,7 +131,7 @@ stages {
                 script {
 
                     def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
-                    def imageTag = "${env.GIT_COMMIT_SHA}"
+                    def imageTag = "bfca98a"
                     AKSdeployer('preprod', 'credentials',dockerImage, imageTag )
                 }
             }
@@ -146,7 +146,7 @@ stages {
 
                        if (userInput) {
                                def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
-                               def imageTag = "${env.GIT_COMMIT_SHA}"
+                               def imageTag = "bfca98a"
                                AKSdeployer('prod', 'credentials',dockerImage, imageTag )
                        }
                        else {
