@@ -18,7 +18,6 @@ def call(String environment, String credentials, String dockerImage , String ima
                             --set image.repository=${dockerImage} \
                             --set image.tag=${imageTag}
                     """
-
                 }
                else {
                   error "❌ Image not found in the registry. Deployment to PROD is not allowed!"

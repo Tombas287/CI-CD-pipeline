@@ -136,16 +136,25 @@ stages {
                 }
             }
         }
-        //stage('Aks deployer prod') {
-        //    steps {
-        //        script {
+        stage('Aks deployer prod') {
+            steps {
+                script {
+                       def userInput = input(
+                       message: 'proceed with prod deployment?',
+                       parameters : [booleanParam(name: 'Confirm', defaultValue: false, description: 'Yes proceed')]
+                       )
 
-        //            def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
-        //            def imageTag = "${env.GIT_COMMIT_SHA}"
-        //            AKSdeployer('prod', 'kubeconfig1',dockerImage, imageTag )
-         //       }
-        //    }
-       // }
+                       if (userInput) {
+                               def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
+                               def imageTag = "${env.GIT_COMMIT_SHA}"
+                               AKSdeployer('prod', 'kubeconfig1',dockerImage, imageTag )
+                       }
+                       else {
+                          error("Deployment aborted by user.")
+                       }
+               }
+           }
+        }
 
     }
 
