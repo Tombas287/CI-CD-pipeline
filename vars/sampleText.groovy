@@ -7,7 +7,7 @@ def call(String pipeline) {
 }
 
 def checkImageExist(String pipeline) {
-    withCredentials([usernamePassword(credentialsId: 'docker_credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
+    withCredentials([usernamePassword(credentialsId: 'docker_login', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
         try {
             // Read and parse pipeline.json 
             def configFile = readFile("${WORKSPACE}/${pipeline}")
