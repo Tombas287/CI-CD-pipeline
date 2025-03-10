@@ -15,7 +15,7 @@ pipeline {
         PATH = "/opt/homebrew/bin:/usr/local/bin:$PATH"
         USERNAME = "7002370412"
         ENVIRONMENT = 'dev'   
-        PIPELINE_FILE = 'pipeline.json'
+        PIPELINE_FILE = '${WORKSPACE}/pipeline.json'
 
     }
 stages {
