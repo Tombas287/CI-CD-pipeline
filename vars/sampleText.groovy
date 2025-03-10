@@ -29,10 +29,10 @@ def checkImageExist(String pipeline) {
             def imageTag = dockerRegistry['imageTag'] ?: "latest"
 
             echo "🔍 Checking image: ${imageName}:${imageTag}"
-
-            sh '''
-                 docker login -u ${DOCKER_USER} --password-stdin
-            '''
+            sh """
+                 docker login --username ${DOCKER_USER} --password-stdin
+            """
+                echo "Login successful." 
 
             def curlCommand = "curl -s -o /dev/null -w '%{http_code}' 'https://hub.docker.com/v2/repositories/${imageName}/tags/${imageTag}/'"
             def httpCode = sh(script: curlCommand, returnStdout: true).trim()
