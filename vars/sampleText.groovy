@@ -30,11 +30,13 @@ def checkImageExist(String pipeline) {
             echo "🔍 Checking image: ${imageName}:${imageTag}"
 
             // Securely log in to Docker Hub
-            sh(script: "echo '${DOCKER_PASSWORD}' | docker login -u '${DOCKER_USER}' --password-stdin")
+            sh '''
+                echo docker login -u "${DOCKER_USERNAME}" --password-stdin
+            '''
 
             // Check if the image exists
             def response = sh(
-                script: "curl -s -o /dev/null -w '%{http_code}' https://hub.docker.com/v2/repositories/${imageName}/tags/${imageTag}/",
+                script: "curl -s -o https://hub.docker.com/v2/repositories/${imageName}/tags/${imageTag}/",
                 returnStdout: true
             ).trim()
 
