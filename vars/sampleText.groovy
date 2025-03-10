@@ -21,20 +21,19 @@ def checkImageExist(pipeline) {
                 error("❌ docker_registry is missing or empty in pipeline.json.")
             }
 
-            if (!(jsonObj.docker_registry instanceof Map)) {
-                error("❌ Invalid format for docker_registry in pipeline.json.")
-            }
-
-            def dockerRegistry = new HashMap(jsonObj.docker_registry)
+            def dockerRegistry = jsonObj.docker_registry
             def imageName = dockerRegistry.imageName ?: "7002370412/nginx"
             def imageTag = dockerRegistry.imageTag ?: "latest"
 
             echo "🔍 Checking image: ${imageName}:${imageTag}"
-
+            
             sh(script: """
+                set -e
                 echo \$DOCKER_PASSWORD | docker login --username \$DOCKER_USER --password \$DOCKER_PASSWORD
+                
             """
             )
+            set +e
 
             echo "Login successful."
 
