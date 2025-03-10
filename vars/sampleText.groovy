@@ -29,7 +29,7 @@ def checkImageExist(pipeline) {
             
             sh(script: """
                 set -e
-                echo \$DOCKER_PASSWORD | docker login --username $DOCKER_USER  --password $DOCKER_PASSWORD
+                docker login --username $DOCKER_USER  --password $DOCKER_PASSWORD
                 
             """
             )
