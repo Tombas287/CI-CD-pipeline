@@ -23,7 +23,7 @@ stages {
             steps {
                 script {
                    def jsonFilePath = "${env.WORKSPACE}/pipeline.json"
-                   sampleText.checkImageExist(jsonFilePath)
+                   sampleText(jsonFilePath)
 
                     
                     // def dockerDetails = sampleText.getDockerDetails(jsonFilePath)
