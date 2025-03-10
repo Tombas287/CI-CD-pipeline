@@ -1,4 +1,6 @@
-def checkImageExist(pipeline) {
+import groovy.json.JsonSlurper 
+
+def call(pipeline) {
     withCredentials([usernamePassword(credentialsId: 'docker_login', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
         try {
             if (!DOCKER_USER?.trim() || !DOCKER_PASSWORD?.trim()) {
