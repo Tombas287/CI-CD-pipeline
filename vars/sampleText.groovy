@@ -1,4 +1,4 @@
-import groovy.json.JsonSlurper 
+import groovy.json.JsonSlurper
 
 def call(pipeline) {
     withCredentials([usernamePassword(credentialsId: 'docker_login', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
@@ -14,18 +14,27 @@ def call(pipeline) {
 
             echo "✅ Docker login successful."
 
-            // Read pipeline.json and extract image details
+            // Read and parse JSON file
             def configFile = readFile(pipeline)
             def jsonSlurper = new JsonSlurper()
             def jsonObj = jsonSlurper.parseText(configFile)
 
-            if (!jsonObj.docker_registry) {
-                error("❌ 'docker_registry' missing in pipeline.json.")
+            // Debugging: Print JSON structure
+            echo "🔍 Parsed JSON: ${jsonObj.toString()}"
+
+            // Ensure 'docker_registry' exists and is a valid Map
+            if (!(jsonObj.docker_registry instanceof Map)) {
+                error("❌ 'docker_registry' is missing or not an object.")
             }
 
             def dockerRegistry = jsonObj.docker_registry
-            def imageName = dockerRegistry.imageName ?: "default/nginx"
-            def imageTag = dockerRegistry.imageTag ?: "latest"
+
+            if (!dockerRegistry.containsKey('imageName') || !dockerRegistry.containsKey('imageTag')) {
+                error("❌ 'imageName' or 'imageTag' is missing in docker_registry.")
+            }
+
+            def imageName = dockerRegistry.imageName
+            def imageTag = dockerRegistry.imageTag
 
             echo "🔍 Checking if image exists: ${imageName}:${imageTag}"
 
