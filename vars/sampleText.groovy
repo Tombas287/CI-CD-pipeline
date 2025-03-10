@@ -19,6 +19,10 @@ def checkImageExist(String pipeline) {
             def jsonObj = jsonSlurper.parseText(configFile)
 
             // Ensure docker_registry is a Map to avoid LazyMap issues
+            if (!(jsonObj.docker_registry instanceof Map)) {
+                error("❌ Invalid format for docker_registry in pipeline.json.")
+            }
+
             def dockerRegistry = jsonObj.docker_registry
             def imageName = dockerRegistry.imageName ?: "7002370412/nginx"
             def imageTag = dockerRegistry.imageTag ?: "latest"
@@ -26,7 +30,7 @@ def checkImageExist(String pipeline) {
             echo "🔍 Checking image: ${imageName}:${imageTag}"
 
             // Securely log in to Docker Hub
-            sh(script: "docker login -u \$DOCKER_USER --password-stdin")
+            sh(script: "echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USER --password-stdin")
 
             // Check if the image exists
             def response = sh(
