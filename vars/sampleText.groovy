@@ -1,4 +1,4 @@
-import groovy.json.JsonSlurperClassic
+import groovy.json.JsonSlurper
 
 def call(pipeline) {
     withCredentials([usernamePassword(credentialsId: 'docker_login', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
@@ -18,7 +18,7 @@ def call(pipeline) {
             // def configFile = readFile(pipeline)
             def configFile = readJSON(file: pipeline)
 
-            def jsonSlurper = new JsonSlurperClassic()
+            def jsonSlurper = new JsonSlurper()
             def jsonObj = jsonSlurper.parseText(configFile)
 
             // Debugging: Print JSON structure
