@@ -23,9 +23,6 @@ def call(pipeline) {
             echo "🔍 Parsed JSON: ${jsonObj.toString()}"
 
             // Ensure 'docker_registry' exists and is a valid Map
-            if (!(jsonObj.docker_registry instanceof Map)) {
-                error("❌ 'docker_registry' is missing or not an object.")
-            }
 
             def dockerRegistry = jsonObj.docker_registry
 
