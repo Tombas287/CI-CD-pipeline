@@ -13,6 +13,7 @@ def checkImageExist(pipeline) {
             }
 
             def configFile = readFile(pipeline)
+             echo "Parsed JSON: ${configFile}"
             def jsonSlurper = new JsonSlurper()
             def jsonObj = jsonSlurper.parseText(configFile)
 
