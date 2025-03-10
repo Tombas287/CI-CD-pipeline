@@ -1,6 +1,12 @@
+//{
+//  "docker_registry": {
+//    "imageName": "7002370412/nginx",
+//    "imageTag": "latest"
+//  }
+// }
+
+
 {
-  "docker_registry": {
-    "imageName": "7002370412/nginx",
-    "imageTag": "latest"
-  }
+    "image": "my-docker-repo/app",
+    "tag": "v1.2.3"
 }
