@@ -15,19 +15,20 @@ pipeline {
         PATH = "/opt/homebrew/bin:/usr/local/bin:$PATH"
         USERNAME = "7002370412"
         ENVIRONMENT = 'dev'   
-        PIPELINE_FILE = '${WORKSPACE}/pipeline.json'
+        PIPELINE_FILE = "${env.WORKSPACE}/pipeline.json"
 
     }
 stages {
     stage('Sample text') {
             steps {
                 script {
-                   // sampleText(env.PIPELINE_FILE)
+                   def jsonFilePath = "${env.WORKSPACE}/pipeline.json"
+                   sampleText(jsonFilePath)
 
-                    def jsonFilePath = "${env.WORKSPACE}/pipeline.json"
-                    def dockerDetails = sampleText.getDockerDetails(jsonFilePath)
-                    echo "Docker Image: ${dockerDetails.image}"
-                    echo "Docker Tag: ${dockerDetails.tag}"
+                    
+                    // def dockerDetails = sampleText.getDockerDetails(jsonFilePath)
+                    // echo "Docker Image: ${dockerDetails.image}"
+                    // echo "Docker Tag: ${dockerDetails.tag}"
                 }
             }
         }
