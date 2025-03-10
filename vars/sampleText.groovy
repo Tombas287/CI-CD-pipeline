@@ -37,6 +37,9 @@ def call(pipeline) {
 
             def dockerImage = jsonObj.imageName
             def imageTag =  jsonObj.imageTag
+            echo "🔍 Extracted imageName: ${jsonObj.imageName}"
+            echo "🔍 Extracted imageTag: ${jsonObj.imageTag}"
+
 
             echo "🔍 Checking if image exists: ${dockerImage}:${imageTag}"
 
