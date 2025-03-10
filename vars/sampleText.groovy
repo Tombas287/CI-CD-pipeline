@@ -16,8 +16,10 @@ def call(pipeline) {
 
             // Read and parse JSON file
             def configFile = readFile(pipeline)
+            def sample = readFile('pipeline.json') // Replace with actual file
+
             // def configFile = readJSON(file: pipeline)
-            
+            echo "🔍 Raw JSON content: ${sample}" // Debug print
 
             def jsonSlurper = new JsonSlurper()
             def jsonObj = jsonSlurper.parseText(configFile)
