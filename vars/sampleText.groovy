@@ -31,7 +31,7 @@ def checkImageExist(pipeline) {
             echo "🔍 Checking image: ${imageName}:${imageTag}"
 
             sh(script: """
-                echo \$DOCKER_PASSWORD | docker login --username \$DOCKER_USER --password-stdin
+                echo \$DOCKER_PASSWORD | docker login --username \$DOCKER_USER --password \$DOCKER_PASSWORD
             """
             )
 
