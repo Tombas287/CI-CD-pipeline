@@ -5,7 +5,7 @@ def call(pipeline) {
     return imageExist
 }
 
-def checkImageExist(String pipeline) {
+def checkImageExist(pipeline) {
     withCredentials([usernamePassword(credentialsId: 'docker_login', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
         try {
             if (!DOCKER_USER?.trim() || !DOCKER_PASSWORD?.trim()) {
