@@ -23,7 +23,8 @@ stages {
             steps {
                 script {
                    // sampleText(env.PIPELINE_FILE)
-                    def dockerDetails = sampleText.getDockerDetails(pipeline.json)
+                    def jsonData = readJSON file: env.PIPELINE_FILE
+                    def dockerDetails = sampleText.getDockerDetails(jsonData)
                     echo "Docker Image: ${dockerDetails.image}"
                     echo "Docker Tag: ${dockerDetails.tag}"
                 }
