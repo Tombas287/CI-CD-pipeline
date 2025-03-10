@@ -27,15 +27,15 @@ def checkImageExist(pipeline) {
 
             echo "🔍 Checking image: ${imageName}:${imageTag}"
             
-            sh(script: """
-                set -e
-                echo \$DOCKER_PASSWORD | docker login --username \$DOCKER_USER --password \$DOCKER_PASSWORD
+            // sh(script: """
+            //     set -e
+            //     echo \$DOCKER_PASSWORD | docker login --username \$DOCKER_USER --password \$DOCKER_PASSWORD
                 
-            """
-            )
-            set +e
+            // """
+            // )
+            // set +e
 
-            echo "Login successful."
+            // echo "Login successful."
 
             def curlCommand = "curl -s -o /dev/null -w '%{http_code}' 'https://hub.docker.com/v2/repositories/${imageName}/tags/${imageTag}/'"
             def httpCode = sh(script: curlCommand, returnStdout: true).trim()
