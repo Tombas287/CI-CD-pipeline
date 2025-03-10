@@ -36,16 +36,16 @@ def call(pipeline) {
             def dockerImage = jsonObj.imageName
             def imageTag =  jsonObj.imageTag
 
-            echo "🔍 Checking if image exists: ${imageName}:${imageTag}"
+            echo "🔍 Checking if image exists: ${dockerImage}:${imageTag}"
 
             def curlCommand = "curl -s -f https://hub.docker.com/v2/repositories/${dockerImage}/tags/${imageTag}"
             def httpCode = sh(script: curlCommand, returnStdout: true).trim()
 
             if (httpCode == "200") {
-                echo "✅ Docker image ${imageName}:${imageTag} exists."
+                echo "✅ Docker image ${dockerImage}:${imageTag} exists."
                 return true
             } else if (httpCode == "404") {
-                echo "❌ Docker image ${imageName}:${imageTag} does NOT exist."
+                echo "❌ Docker image ${dockerImage}:${imageTag} does NOT exist."
                 return false
             } else {
                 echo "❌ Unexpected error. HTTP code: ${httpCode}"
