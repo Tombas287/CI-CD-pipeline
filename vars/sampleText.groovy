@@ -24,7 +24,7 @@ def checkImageExist(String pipeline) {
             echo "🔍 Checking image: ${imageName}:${imageTag}"
 
             // Log in to Docker Hub
-            sh(script: "docker login -u '${DOCKER_USER}' --password-stdin", returnStdout: true)
+            sh(script: "docker login -u '${DOCKER_USER}' --password-stdin" , returnStdout: true)
 
             // Check if the image exists
             def response = sh(
