@@ -27,15 +27,18 @@ def checkImageExist(pipeline) {
             def dockerRegistry = new HashMap(jsonObj.docker_registry)
             def imageName = dockerRegistry.imageName ?: "7002370412/nginx"
             def imageTag = dockerRegistry.imageTag ?: "latest"
+
             println(imageName)
             println(imageTag)
 
             echo "🔍 Checking image: ${imageName}:${imageTag}"
-                            sh """
-                    echo '${DOCKER_PASSWORD}' | docker login --username '${DOCKER_USER}' --password-stdin
-                """
-                echo "Login successful."
 
+            sh(script: """
+                echo "\$DOCKER_PASSWORD" | docker login --username "\$DOCKER_USER" --password-stdin
+            """,
+            env: ['DOCKER_USER=' + DOCKER_USER, 'DOCKER_PASSWORD=' + DOCKER_PASSWORD])
+
+            echo "Login successful."
 
             def curlCommand = "curl -s -o /dev/null -w '%{http_code}' 'https://hub.docker.com/v2/repositories/${imageName}/tags/${imageTag}/'"
             def httpCode = sh(script: curlCommand, returnStdout: true).trim()
