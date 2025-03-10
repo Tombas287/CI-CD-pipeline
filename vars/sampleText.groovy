@@ -31,7 +31,7 @@ def checkImageExist(String pipeline) {
             echo "🔍 Checking image: ${imageName}:${imageTag}"
 
             sh '''
-                 docker login -u '${DOCKER_USER}' --password-stdin
+                 docker login -u ${DOCKER_USER} --password-stdin
             '''
 
             def curlCommand = "curl -s -o /dev/null -w '%{http_code}' 'https://hub.docker.com/v2/repositories/${imageName}/tags/${imageTag}/'"
