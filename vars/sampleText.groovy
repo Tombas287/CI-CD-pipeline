@@ -15,8 +15,9 @@ def call(pipeline) {
             echo "✅ Docker login successful."
 
             // Read and parse JSON file
-            // def configFile = readFile(pipeline)
-            def configFile = readJSON(file: pipeline)
+            def configFile = readFile(pipeline)
+            // def configFile = readJSON(file: pipeline)
+            
 
             def jsonSlurper = new JsonSlurper()
             def jsonObj = jsonSlurper.parseText(configFile)
