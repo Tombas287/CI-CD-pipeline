@@ -18,14 +18,14 @@ def checkImageExist(String pipeline) {
             def dockerRegistry = jsonObj?.docker_registry ?: [:]
 
             // Use defaults if missing
-            def imageName = dockerRegistry.imageName ?: "app"
+            def imageName = dockerRegistry.imageName ?: "7002370412/nginx"
             def imageTag = dockerRegistry.imageTag ?: "latest"
 
             echo "🔍 Checking image: ${imageName}:${imageTag}"
 
             // Log in to Docker Hub
             // sh(script: "docker login -u '${DOCKER_USER}' --password-stdin")
-           sh ' echo docker login -u "${DOCKER_USERNAME}" --password-stdin'
+           sh 'docker login -u ${DOCKER_USERNAME} --password-stdin'
 
             // Check if the image exists
             def response = sh(
