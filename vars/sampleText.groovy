@@ -1,6 +1,6 @@
 import groovy.json.JsonSlurper
 
-def call(String pipeline) {
+def call(pipeline) {
     def imageExist = checkImageExist(pipeline)
     return imageExist
 }
@@ -25,13 +25,13 @@ def checkImageExist(String pipeline) {
             }
 
             def dockerRegistry = new HashMap(jsonObj.docker_registry)
-            def imageName = dockerRegistry.imageName ?: "7002370412/nginx"
-            def imageTag = dockerRegistry.imageTag ?: "latest"
+            def imageName = dockerRegistry['imageName'] ?: "7002370412/nginx"
+            def imageTag = dockerRegistry['imageTag'] ?: "latest"
 
             echo "🔍 Checking image: ${imageName}:${imageTag}"
 
             sh '''
-                echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USER}" --password-stdin
+                 docker login -u '${DOCKER_USER}' --password-stdin
             '''
 
             def curlCommand = "curl -s -o /dev/null -w '%{http_code}' 'https://hub.docker.com/v2/repositories/${imageName}/tags/${imageTag}/'"
