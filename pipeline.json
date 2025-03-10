@@ -1,6 +1,6 @@
 {
   "docker_registry": {
-    "imageName": "7002370412",
+    "imageName": "7002370412/nginx",
     "imageTag": "latest"
   }
 }
