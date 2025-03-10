@@ -28,15 +28,11 @@ def checkImageExist(pipeline) {
             def imageName = dockerRegistry.imageName ?: "7002370412/nginx"
             def imageTag = dockerRegistry.imageTag ?: "latest"
 
-            println(imageName)
-            println(imageTag)
-
             echo "🔍 Checking image: ${imageName}:${imageTag}"
 
             sh(script: """
                 echo "\$DOCKER_PASSWORD" | docker login --username "\$DOCKER_USER" --password-stdin
-            """,
-            env: ['DOCKER_USER=' + DOCKER_USER, 'DOCKER_PASSWORD=' + DOCKER_PASSWORD])
+            """
 
             echo "Login successful."
 
