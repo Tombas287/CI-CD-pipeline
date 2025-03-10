@@ -1,0 +1,6 @@
+{
+  "docker_registry": {
+    "imageName": "7002370412",
+    "imageTag": "latest"
+  }
+}
