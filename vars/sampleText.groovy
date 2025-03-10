@@ -1,4 +1,4 @@
-import groovy.json.JsonSlurper
+import groovy.json.JsonSlurperClassic
 
 def call(pipeline) {
     def imageExist = checkImageExist(pipeline)
@@ -13,7 +13,7 @@ def checkImageExist(pipeline) {
             }
 
             def configFile = readFile("${WORKSPACE}/${pipeline}")
-            def jsonSlurper = new JsonSlurper()
+            def jsonSlurper = new JsonSlurperClassic()
             def jsonObj = jsonSlurper.parseText(configFile)
 
             if (!jsonObj.docker_registry) {
