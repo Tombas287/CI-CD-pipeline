@@ -23,11 +23,9 @@ stages {
             steps {
                 script {
                    // sampleText(env.PIPELINE_FILE)
-                    sh 'ls -l ${env.WORKSPACE}/pipeline.json'
-                    echo "Checking if pipeline.json exists at: ${env.WORKSPACE}/pipeline.json"
 
-                     echo "PIPELINE_FILE path: ${env.PIPELINE_FILE}"
-                    def dockerDetails = sampleText.getDockerDetails(env.PIPELINE_FILE)
+                    def jsonFilePath = "${env.WORKSPACE}/pipeline.json"
+                    def dockerDetails = sampleText.getDockerDetails(jsonFilePath)
                     echo "Docker Image: ${dockerDetails.image}"
                     echo "Docker Tag: ${dockerDetails.tag}"
                 }
