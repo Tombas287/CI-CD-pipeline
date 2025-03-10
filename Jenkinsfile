@@ -22,7 +22,7 @@ stages {
     stage('Sample text') {
             steps {
                 script {
-                   sampleText(PIPELINE_FILE)
+                   sampleText(env.PIPELINE_FILE)
                 }
             }
         }
