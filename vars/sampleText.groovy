@@ -33,12 +33,12 @@ def call(pipeline) {
             //     error("❌ 'imageName' or 'imageTag' is missing in docker_registry.")
             // }
 
-            def imageName = jsonObj.imageName
+            def dockerImage = jsonObj.imageName
             def imageTag =  jsonObj.imageTag
 
             echo "🔍 Checking if image exists: ${imageName}:${imageTag}"
 
-            def curlCommand = "curl -s -o /dev/null -w '%{http_code}' 'https://hub.docker.com/v2/repositories/${imageName}/tags/${imageTag}/'"
+            def curlCommand = "curl -s -f https://hub.docker.com/v2/repositories/${dockerImage}/tags/${imageTag}"
             def httpCode = sh(script: curlCommand, returnStdout: true).trim()
 
             if (httpCode == "200") {
