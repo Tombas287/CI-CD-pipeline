@@ -1,7 +1,7 @@
 import groovy.json.JsonSlurper
 
 def call(pipeline) {
-  def imageExist = checkImageExist(String pipeline)
+  def imageExist = checkImageExist(pipeline)
   return imageExist  
   
 }
