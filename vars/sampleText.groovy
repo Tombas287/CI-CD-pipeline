@@ -27,13 +27,14 @@ def checkImageExist(pipeline) {
 
             echo "🔍 Checking image: ${imageName}:${imageTag}"
             
+                       
             sh(script: """
-                set -e
-                docker login --username $DOCKER_USER  --password $DOCKER_PASSWORD
-                
-            """
-            )
-            set +e
+                #!/bin/bash
+                set -e  # Exit on error
+                docker login --username $DOCKER_USER --password $DOCKER_PASSWORD
+                set +e  # Disable exit on error
+            """)
+
 
             echo "Login successful."
 
