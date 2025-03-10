@@ -19,19 +19,19 @@ pipeline {
 
     }
 stages {
-    // stage('Sample text') {
-    //         steps {
-    //             script {
-    //                def jsonFilePath = "${env.WORKSPACE}/pipeline.json"
-    //                sampleText(jsonFilePath)
+    stage('Sample text') {
+            steps {
+                script {
+                   def jsonFilePath = "${env.WORKSPACE}/pipeline.json"
+                   sampleText.checkImageExist(jsonFilePath)
 
                     
-    //                 // def dockerDetails = sampleText.getDockerDetails(jsonFilePath)
-    //                 // echo "Docker Image: ${dockerDetails.image}"
-    //                 // echo "Docker Tag: ${dockerDetails.tag}"
-    //             }
-    //         }
-    //     }
+                    // def dockerDetails = sampleText.getDockerDetails(jsonFilePath)
+                    // echo "Docker Image: ${dockerDetails.image}"
+                    // echo "Docker Tag: ${dockerDetails.tag}"
+                }
+            }
+        }
 
         stage('Set Commit SHA') {
              steps {
