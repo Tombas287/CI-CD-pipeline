@@ -12,7 +12,7 @@ def checkImageExist(pipeline) {
                 error("❌ Docker credentials not found. Check Jenkins credentials store.")
             }
 
-            def configFile = readFile("${WORKSPACE}/${pipeline}")
+            def configFile = readFile(pipeline)
             def jsonSlurper = new JsonSlurperClassic()
             def jsonObj = jsonSlurper.parseText(configFile)
 
