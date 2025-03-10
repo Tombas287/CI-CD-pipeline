@@ -30,7 +30,7 @@ def checkImageExist(String pipeline) {
             echo "🔍 Checking image: ${imageName}:${imageTag}"
 
             // Securely log in to Docker Hub
-            sh(script: "echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USER --password-stdin")
+            sh(script: "echo '${DOCKER_PASSWORD}' | docker login -u '${DOCKER_USER}' --password-stdin")
 
             // Check if the image exists
             def response = sh(
