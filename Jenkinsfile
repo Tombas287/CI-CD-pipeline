@@ -19,27 +19,27 @@ pipeline {
 
     }
 stages {
-    stage('Sample text') {
-            steps {
-                script {
-                   def jsonFilePath = "${env.WORKSPACE}/pipeline.json"
-                   sampleText(jsonFilePath)
+    // stage('Sample text') {
+    //         steps {
+    //             script {
+    //                def jsonFilePath = "${env.WORKSPACE}/pipeline.json"
+    //                sampleText(jsonFilePath)
 
                     
-                    // def dockerDetails = sampleText.getDockerDetails(jsonFilePath)
-                    // echo "Docker Image: ${dockerDetails.image}"
-                    // echo "Docker Tag: ${dockerDetails.tag}"
-                }
-            }
-        }
+    //                 // def dockerDetails = sampleText.getDockerDetails(jsonFilePath)
+    //                 // echo "Docker Image: ${dockerDetails.image}"
+    //                 // echo "Docker Tag: ${dockerDetails.tag}"
+    //             }
+    //         }
+    //     }
 
-        // stage('Set Commit SHA') {
-        //      steps {
-        //          script {
-        //              env.GIT_COMMIT_SHA = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-        //          }
-        //      }
-        //  }
+        stage('Set Commit SHA') {
+             steps {
+                 script {
+                     env.GIT_COMMIT_SHA = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                 }
+             }
+         }
          // stage('Pip Builder'){
          //     steps {
          //         script {
@@ -86,15 +86,15 @@ stages {
 
         //     }
 
-        // stage('Build and Tag Docker Image') {
-        //     when { expression { currentBuild.result == null } }
-        //      steps {
-        //          script {
-        //              def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
-        //              buildAndTagImage(dockerTag)
-        //          }
-        //      }
-        //  }
+        stage('Build and Tag Docker Image') {
+            when { expression { currentBuild.result == null } }
+             steps {
+                 script {
+                     def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
+                     buildAndTagImage(dockerTag)
+                 }
+             }
+         }
 
          // stage('Image scan'){
          //     steps {
@@ -104,15 +104,15 @@ stages {
          //     }
          //   }
          // }
-        // stage('Docker push to registry'){
-        //     when { expression { currentBuild.result == null } }
-        //     steps {
-        //         script {
-        //             def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
-        //             dockerPush(dockerTag)
-        //         }
-        //     }
-        // }
+        stage('Docker push to registry'){
+            when { expression { currentBuild.result == null } }
+            steps {
+                script {
+                    def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
+                    dockerPush(dockerTag)
+                }
+            }
+        }
         // stage('Aks deployer Dev') {
         //     steps {
         //         script {
