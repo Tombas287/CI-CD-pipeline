@@ -27,14 +27,14 @@ def call(pipeline) {
 
             // Ensure 'docker_registry' exists and is a valid Map
 
-            def dockerRegistry = jsonObj.docker_registry
+            // def dockerRegistry = jsonObj.docker_registry
 
-            if (!dockerRegistry.containsKey('imageName') || !dockerRegistry.containsKey('imageTag')) {
-                error("❌ 'imageName' or 'imageTag' is missing in docker_registry.")
-            }
+            // if (!dockerRegistry.containsKey('imageName') || !dockerRegistry.containsKey('imageTag')) {
+            //     error("❌ 'imageName' or 'imageTag' is missing in docker_registry.")
+            // }
 
-            def imageName = dockerRegistry.imageName
-            def imageTag = dockerRegistry.imageTag
+            def imageName = jsonObj.imageName
+            def imageTag =  jsonObj.imageTag
 
             echo "🔍 Checking if image exists: ${imageName}:${imageTag}"
 
