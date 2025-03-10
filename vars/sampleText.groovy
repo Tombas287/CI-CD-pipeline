@@ -9,6 +9,10 @@ def call(pipeline) {
 def checkImageExist(String pipeline) {
     withCredentials([usernamePassword(credentialsId: 'docker_login', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
         try {
+
+            if (!DOCKER_USER?.trim() || !DOCKER_PASSWORD?.trim()) {
+              error("❌ Docker credentials not found. Check Jenkins credentials store.")
+            }
             // Read and parse pipeline.json 
             def configFile = readFile("${WORKSPACE}/${pipeline}")
             def jsonSlurper = new JsonSlurper()
@@ -18,16 +22,16 @@ def checkImageExist(String pipeline) {
             def dockerRegistry = jsonObj?.docker_registry ?: [:]
 
             // Use defaults if missing
-            def imageName = dockerRegistry.imageName ?: "7002370412/nginx"
-            def imageTag = dockerRegistry.imageTag ?: "latest"
+            def imageName = dockerRegistry.imageName.toString() ?: "7002370412/nginx"
+            def imageTag = dockerRegistry.imageTag.toString() ?: "latest"
 
             echo "🔍 Checking image: ${imageName}:${imageTag}"
 
             // Log in to Docker Hub
             // sh(script: "docker login -u '${DOCKER_USER}' --password-stdin")
-           sh """
-              docker login -u '${DOCKER_USER}' --password-stdin
-          """
+            sh(script: "echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USER --password-stdin", returnStdout: true)
+
+          
 
             // Check if the image exists
             def response = sh(
