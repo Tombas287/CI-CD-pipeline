@@ -43,7 +43,7 @@ def call(pipeline) {
 
             echo "🔍 Checking if image exists: ${dockerImage}:${imageTag}"
 
-            def curlCommand = "curl -s -f https://hub.docker.com/v2/repositories/${dockerImage}/tags/${imageTag}"
+            def curlCommand = "curl -s -f https://hub.docker.com/v2/repositories/'${dockerImage}'/tags/'${imageTag}'"
             def httpCode = sh(script: curlCommand, returnStdout: true).trim()
 
             if (httpCode == "200") {
