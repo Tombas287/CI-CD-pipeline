@@ -86,15 +86,15 @@ stages {
 
         //     }
 
-        stage('Build and Tag Docker Image') {
-            when { expression { currentBuild.result == null } }
-             steps {
-                 script {
-                     def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
-                     buildAndTagImage(dockerTag)
-                 }
-             }
-         }
+        // stage('Build and Tag Docker Image') {
+        //     when { expression { currentBuild.result == null } }
+        //      steps {
+        //          script {
+        //              def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
+        //              buildAndTagImage(dockerTag)
+        //          }
+        //      }
+        //  }
 
          // stage('Image scan'){
          //     steps {
@@ -104,16 +104,16 @@ stages {
          //     }
          //   }
          // }
-        stage('Docker push to registry'){
-            when { expression { currentBuild.result == null } }
-            steps {
-                script {
-                    def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
-                    dockerPush(dockerTag)
-                }
-            }
-        }
-        // stage('Aks deployer Dev') {
+        // stage('Docker push to registry'){
+        //     when { expression { currentBuild.result == null } }
+        //     steps {
+        //         script {
+        //             def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
+        //             dockerPush(dockerTag)
+        //         }
+        //     }
+        // }
+        // // stage('Aks deployer Dev') {
         //     steps {
         //         script {
 
@@ -165,14 +165,14 @@ stages {
 
     }
 
-    post {
-        success {
-            script {
-                sh "docker rmi -f ${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
-            }
-        }
-        failure {
-            echo "Build failed"
-        }
-    }
-}
+//     post {
+//         success {
+//             script {
+//                 sh "docker rmi -f ${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
+//             }
+//         }
+//         failure {
+//             echo "Build failed"
+//         }
+//     }
+// }
