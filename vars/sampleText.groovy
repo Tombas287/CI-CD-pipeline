@@ -1,4 +1,4 @@
-import groovy.json.JsonSlurperClassic
+import groovy.json.JsonSlurper
 
 def call(pipeline) {
     def imageExist = checkImageExist(pipeline)
@@ -13,7 +13,7 @@ def checkImageExist(pipeline) {
             }
 
             def configFile = readFile(pipeline)
-            def jsonSlurper = new JsonSlurperClassic()
+            def jsonSlurper = new JsonSlurper()
             def jsonObj = jsonSlurper.parseText(configFile)
 
             if (!jsonObj.docker_registry) {
@@ -25,8 +25,10 @@ def checkImageExist(pipeline) {
             }
 
             def dockerRegistry = new HashMap(jsonObj.docker_registry)
-            def imageName = dockerRegistry['imageName'] ?: "7002370412/nginx"
-            def imageTag = dockerRegistry['imageTag'] ?: "latest"
+            def imageName = dockerRegistry.imageName ?: "7002370412/nginx"
+            def imageTag = dockerRegistry.imageTag ?: "latest"
+            println(imageName)
+            println(imageTag)
 
             echo "🔍 Checking image: ${imageName}:${imageTag}"
             sh """
