@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 def call(filePath) {
     withCredentials([usernamePassword(credentialsId: 'docker_login', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
         try {
@@ -46,3 +48,4 @@ def checkImage(filePath) {
         return false
     }
 }
+
