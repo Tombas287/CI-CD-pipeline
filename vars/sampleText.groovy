@@ -19,8 +19,8 @@ def call(pipeline) {
             def jsonSlurper = new JsonSlurper()
             def jsonObj = jsonSlurper.parseText(fileContent)
 
-            def dockerImage = jsonObj?.docker_registry?.imageName
-            def imageTag = jsonObj?.docker_registry?.imageTag
+            def dockerImage = jsonObj.imageName
+            def imageTag = jsonObj.imageTag
 
             if (!dockerImage || !imageTag) {
                 error("❌ 'imageName' or 'imageTag' is missing in docker_registry.")
@@ -32,7 +32,7 @@ def call(pipeline) {
             echo "🔍 Checking if image exists: ${dockerImage}:${imageTag}"
 
             // ✅ FIX: Corrected curl syntax
-            def curlCommand = "curl -s -o /dev/null -w '%{http_code}' https://hub.docker.com/v2/repositories/${dockerImage}/tags/${imageTag}"
+            def curlCommand = "curl -s -f https://hub.docker.com/v2/repositories/${dockerImage}/tags/${imageTag}"
             def httpCode = sh(script: curlCommand, returnStdout: true).trim()
 
             if (httpCode == "200") {
