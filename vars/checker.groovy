@@ -13,7 +13,6 @@ def call(filePath) {
     }
 
     def jsonSlurper = new JsonSlurper()
-    def jsonObj
 
     try {
         jsonObj = jsonSlurper.parseText(fileContent)
@@ -31,7 +30,7 @@ def call(filePath) {
     }
 
     // ✅ Suppress output & return only true/false
-    def status = sh(script: "curl -s -f -o /dev/null https://hub.docker.com/v2/repositories/${imageName}/tags/${imageTag}", returnStatus: true)
+    def status = sh(script: "curl -s -f https://hub.docker.com/v2/repositories/${imageName}/tags/${imageTag}", returnStatus: true)
 
     if (status == 0) {
         return true  // ✅ Image exists
