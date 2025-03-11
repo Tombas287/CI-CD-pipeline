@@ -15,8 +15,8 @@ def call(pipeline) {
             echo "✅ Docker login successful."
 
             // Read and parse JSON file
-            def configFile = readFile(pipeline)
-            def sample = readFile('pipeline.json') // Replace with actual file
+            def configFile = new File(pipeline)
+//             def sample = readFile('pipeline.json') // Replace with actual file
 
             // def configFile = readJSON(file: pipeline)
             echo "🔍 Raw JSON content: ${sample}" // Debug print
@@ -25,7 +25,7 @@ def call(pipeline) {
             def jsonObj = jsonSlurper.parseText(configFile)
 
             // Debugging: Print JSON structure
-            echo "🔍 Parsed JSON: ${jsonObj.toString()}"
+//             echo "🔍 Parsed JSON: ${jsonObj.toString()}"
 
             // Ensure 'docker_registry' exists and is a valid Map
 
