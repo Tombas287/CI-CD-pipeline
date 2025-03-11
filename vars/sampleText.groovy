@@ -27,33 +27,23 @@ def call(filePath) {
 // ✅ Function to check image in Docker Hub
 def checkImage(filePath) {
     def fileContent = readFile(filePath).trim()
-    echo "📄 JSON File Content: ${fileContent.inspect()}"
-
-    def jsonSlurper = new JsonSlurper()
-    def jsonObj = jsonSlurper.parseText(fileContent)
-
-    def dockerImage = jsonObj.imageName
+    def jsonslurper = new JsonSlurper()
+    def jsonObj = jsonslurper.parseText(fileContent)
+    def imageName = jsonObj.imageName
     def imageTag = jsonObj.imageTag
 
-    if (!dockerImage || !imageTag) {
-        error("❌ 'imageName' or 'imageTag' is missing in JSON.")
+    def imageExist = true
+    if (imageName?.trim() && imageTag?.trim()){
+        def status = sh(script: "curl -s -f https://hub.docker.com/v2/repositories/${imageName}/tags/${imageTag}", returnStatus: true)
+        if (status == 0) {
+            echo "Image exist"
+            imageExist = true
+
+        } else {
+            echo "Image not found in environment."
+            imageExist = false
+        }
+        return imageExist
     }
 
-    echo "🔍 Extracted imageName: ${dockerImage}"
-    echo "🔍 Extracted imageTag: ${imageTag}"
-
-    // ✅ Proper cURL command formatting
-    def curlCommand = "curl -s -o /dev/null -w '%{http_code}' https://hub.docker.com/v2/repositories/${dockerImage}/tags/${imageTag}"
-    def httpCode = sh(script: curlCommand, returnStdout: true).trim()
-
-    if (httpCode == "200") {
-        echo "✅ Docker image ${dockerImage}:${imageTag} exists."
-        return true
-    } else if (httpCode == "404") {
-        echo "❌ Docker image ${dockerImage}:${imageTag} does NOT exist."
-        return false
-    } else {
-        echo "❌ Unexpected error. HTTP code: ${httpCode}"
-        return false
-    }
 }
