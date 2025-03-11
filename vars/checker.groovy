@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 def call(filePath) {
     if (!fileExists(filePath)) {
         echo "❌ JSON file does not exist: ${filePath}"
