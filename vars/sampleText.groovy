@@ -20,7 +20,9 @@ def call(pipeline) {
             }
 
             // ✅ Read JSON file properly
-            def fileContent = readFile(pipeline).trim()
+//             def fileContent = readFile(pipeline).trim()
+            def fileContent = '{ "imageName": "7002370412/myapp", "imageTag": "a9e90c4" }'
+
             echo "📄 JSON File Content: ${fileContent}"  // Debugging step
 
             def jsonSlurper = new JsonSlurper()
