@@ -23,7 +23,7 @@ stages {
             steps {
                 script {
                    def jsonFilePath = "pipeline.json"
-                   sampleText(jsonFilePath)
+                   checker(jsonFilePath)
 
                     
                     // def dockerDetails = sampleText.getDockerDetails(jsonFilePath)
