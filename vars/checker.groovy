@@ -12,8 +12,8 @@ def call(filePath) {
         return false
     }
 
-    def jsonSlurper = new JsonSlurper()
-    def jsonObj = jsonSlurper.parseText(fileContent)
+    // ✅ Ensure JsonSlurper is not stored as a variable to avoid serialization issues
+    def jsonObj = new JsonSlurper().parseText(fileContent)
     def imageName = jsonObj.imageName
     def imageTag = jsonObj.imageTag
 
@@ -22,12 +22,19 @@ def call(filePath) {
         return false
     }
 
-    // ✅ Suppress output & return only true/false
-    def status = sh(script: "curl -s -f https://hub.docker.com/v2/repositories/${imageName}/tags/${imageTag}", returnStatus: true)
+    // ✅ Improved error handling
+    try {
+        def status = sh(script: "curl -s -f -o /dev/null https://hub.docker.com/v2/repositories/${imageName}/tags/${imageTag}", returnStatus: true)
 
-    if (status == 0) {
-        return true  // ✅ Image exists
-    } else {
-        return false  // ❌ Image not found
+        if (status == 0) {
+            echo "✅ Docker image ${imageName}:${imageTag} exists."
+            return true
+        } else {
+            echo "❌ Docker image ${imageName}:${imageTag} not found."
+            return false
+        }
+    } catch (Exception e) {
+        echo "❌ Error checking Docker image: ${e.getMessage()}"
+        return false
     }
 }
