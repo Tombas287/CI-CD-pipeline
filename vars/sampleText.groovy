@@ -26,8 +26,8 @@ def call(pipeline) {
             def jsonSlurper = new JsonSlurper()
             def jsonObj = jsonSlurper.parseText(fileContent)  // Parse JSON content
 
-            def dockerImage = jsonObj?.docker_registry?.imageName
-            def imageTag = jsonObj?.docker_registry?.imageTag
+            def dockerImage = jsonObj.imageName
+            def imageTag = jsonObj.imageTag
 
             if (!dockerImage || !imageTag) {
                 error("❌ 'imageName' or 'imageTag' is missing in docker_registry.")
