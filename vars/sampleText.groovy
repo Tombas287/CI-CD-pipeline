@@ -14,61 +14,46 @@ def call(filePath) {
 
             echo "✅ Docker login successful."
 
-            // ✅ Debug step: Check if file exists
-            if (!fileExists(filePath)) {
-                error("❌ JSON file '${filePath}' not found! Make sure it is available in the Jenkins workspace.")
-            }
-
-            // ✅ Read JSON file properly
-//             def fileContent = readFile(pipeline).trim()
-
-            def fileContent = readFile(filePath).trim()
-
-            def jsonSlurper = new JsonSlurper()
-            def jsonObj = jsonSlurper.parseText(fileContent)  // Parse JSON content
-
-            def dockerImage = jsonObj.imageName
-            def imageTag = jsonObj.imageTag
-
-            if (!dockerImage || !imageTag) {
-                error("❌ 'imageName' or 'imageTag' is missing in docker_registry.")
-            }
-
-            echo "🔍 Extracted imageName: ${dockerImage}"
-            echo "🔍 Extracted imageTag: ${imageTag}"
-
-            echo "🔍 Checking if image exists: ${dockerImage}:${imageTag}"
-
-            def curlCommand = "curl -s -o /dev/null -w '%{http_code}' https://hub.docker.com/v2/repositories/${dockerImage}/tags/${imageTag}"
-            def httpCode = sh(script: curlCommand, returnStdout: true).trim()
-
-            if (httpCode == "200") {
-                echo "✅ Docker image ${dockerImage}:${imageTag} exists."
-                return true
-            } else if (httpCode == "404") {
-                echo "❌ Docker image ${dockerImage}:${imageTag} does NOT exist."
-                return false
-            } else {
-                echo "❌ Unexpected error. HTTP code: ${httpCode}"
-                return false
-            }
+            // ✅ Call checkImage only if login succeeds
+            return checkImage(filePath)
 
         } catch (Exception e) {
-            echo "❌ Failed to check image: ${e.message}"
+            echo "❌ Failed: ${e.message}"
             return false
         }
     }
 }
 
-//
-//
-// def call(filePath) {
-//     def fileContent = readFile(filePath).trim()
-//     echo "📄 JSON File Content: ${fileContent.inspect()}"
-//
-//     def jsonSlurper = new JsonSlurper()
-//     def jsonObj = jsonSlurper.parseText(fileContent)
-//
-//     echo "✅ Successfully parsed JSON"
-//     return jsonObj
-// }
+// ✅ Function to check image in Docker Hub
+def checkImage(filePath) {
+    def fileContent = readFile(filePath).trim()
+    echo "📄 JSON File Content: ${fileContent.inspect()}"
+
+    def jsonSlurper = new JsonSlurper()
+    def jsonObj = jsonSlurper.parseText(fileContent)
+
+    def dockerImage = jsonObj.imageName
+    def imageTag = jsonObj.imageTag
+
+    if (!dockerImage || !imageTag) {
+        error("❌ 'imageName' or 'imageTag' is missing in JSON.")
+    }
+
+    echo "🔍 Extracted imageName: ${dockerImage}"
+    echo "🔍 Extracted imageTag: ${imageTag}"
+
+    // ✅ Proper cURL command formatting
+    def curlCommand = "curl -s -o /dev/null -w '%{http_code}' https://hub.docker.com/v2/repositories/${dockerImage}/tags/${imageTag}"
+    def httpCode = sh(script: curlCommand, returnStdout: true).trim()
+
+    if (httpCode == "200") {
+        echo "✅ Docker image ${dockerImage}:${imageTag} exists."
+        return true
+    } else if (httpCode == "404") {
+        echo "❌ Docker image ${dockerImage}:${imageTag} does NOT exist."
+        return false
+    } else {
+        echo "❌ Unexpected error. HTTP code: ${httpCode}"
+        return false
+    }
+}
