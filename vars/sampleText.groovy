@@ -63,7 +63,7 @@ import groovy.json.JsonSlurper
 
 
 
-def sampleText(filePath) {
+def call(filePath) {
     def fileContent = readFile(filePath).trim()
     echo "📄 JSON File Content: ${fileContent.inspect()}"
 
