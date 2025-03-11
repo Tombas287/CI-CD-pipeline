@@ -13,14 +13,7 @@ def call(filePath) {
     }
 
     def jsonSlurper = new JsonSlurper()
-
-    try {
-        def jsonObj = jsonSlurper.parseText(fileContent)
-    } catch (Exception e) {
-        echo "❌ Invalid JSON format: ${e.message}"
-        return false
-    }
-
+    def jsonObj = jsonSlurper.parseText(fileContent)
     def imageName = jsonObj.imageName
     def imageTag = jsonObj.imageTag
 
