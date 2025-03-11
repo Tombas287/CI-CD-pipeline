@@ -1,5 +1,3 @@
-import groovy.json.JsonSlurper
-
 def call(filePath) {
     withCredentials([usernamePassword(credentialsId: 'docker_login', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
         try {
@@ -15,36 +13,13 @@ def call(filePath) {
             echo "✅ Docker login successful."
 
             // ✅ Call checkImage only if login succeeds
-            output = checkImage(filePath)
-            println(output)
+            def output = checkImage(filePath)
+            echo "Image check result: ${output}"
+            return output  // ✅ Return the result
 
         } catch (Exception e) {
             echo "❌ Failed: ${e.message}"
-
+            return false  // ✅ Return false on failure
         }
     }
-}
-
-// ✅ Function to check image in Docker Hub
-def checkImage(filePath) {
-    def fileContent = readFile(filePath).trim()
-    def jsonslurper = new JsonSlurper()
-    def jsonObj = jsonslurper.parseText(fileContent)
-    def imageName = jsonObj.imageName
-    def imageTag = jsonObj.imageTag
-
-    def imageExist = true
-    if (imageName?.trim() && imageTag?.trim()){
-        def status = sh(script: "curl -s -f https://hub.docker.com/v2/repositories/${imageName}/tags/${imageTag}", returnStatus: true)
-        if (status == 0) {
-            echo "Image exist"
-            imageExist = true
-
-        } else {
-            echo "Image not found in environment."
-            imageExist = false
-        }
-        return imageExist
-    }
-
 }
