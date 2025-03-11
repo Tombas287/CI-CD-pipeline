@@ -1,6 +1,6 @@
 import groovy.json.JsonSlurper
 
-def call(pipeline) {
+def call(filePath) {
     withCredentials([usernamePassword(credentialsId: 'docker_login', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
         try {
             if (!DOCKER_USER?.trim() || !DOCKER_PASSWORD?.trim()) {
@@ -15,8 +15,8 @@ def call(pipeline) {
             echo "✅ Docker login successful."
 
             // ✅ Debug step: Check if file exists
-            if (!fileExists(pipeline)) {
-                error("❌ JSON file '${pipeline}' not found! Make sure it is available in the Jenkins workspace.")
+            if (!fileExists(filePath)) {
+                error("❌ JSON file '${filePath}' not found! Make sure it is available in the Jenkins workspace.")
             }
 
             // ✅ Read JSON file properly
