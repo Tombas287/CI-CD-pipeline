@@ -22,7 +22,7 @@ stages {
     stage('Sample text') {
             steps {
                 script {
-                   def jsonFilePath = "${env.WORKSPACE}/pipeline.json"
+                   def jsonFilePath = "pipeline.json"
                    sampleText(jsonFilePath)
 
                     
