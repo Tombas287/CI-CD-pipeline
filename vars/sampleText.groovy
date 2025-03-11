@@ -23,7 +23,6 @@ def call(filePath) {
         }
     }
 }
-
 def checkImage(filePath) {
     if (!fileExists(filePath)) {
         echo "❌ JSON file does not exist: ${filePath}"
@@ -54,12 +53,12 @@ def checkImage(filePath) {
         return false
     }
 
-    def status = sh(script: "curl -s -f https://hub.docker.com/v2/repositories/${imageName}/tags/${imageTag}", returnStatus: true)
+    // ✅ Suppress output & return only true/false
+    def status = sh(script: "curl -s -f -o /dev/null https://hub.docker.com/v2/repositories/${imageName}/tags/${imageTag}", returnStatus: true)
+
     if (status == 0) {
-        echo "✅ Image exists in Docker Hub."
-        return true
+        return true  // ✅ Image exists
     } else {
-        echo "❌ Image not found in Docker Hub."
-        return false
+        return false  // ❌ Image not found
     }
 }
