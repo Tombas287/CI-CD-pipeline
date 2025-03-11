@@ -17,23 +17,10 @@ def call(pipeline) {
             // Read and parse JSON file
             def configFile = new File(pipeline)
 //             def sample = readFile('pipeline.json') // Replace with actual file
-
             // def configFile = readJSON(file: pipeline)
             echo "🔍 Raw JSON content: ${sample}" // Debug print
-
             def jsonSlurper = new JsonSlurper()
-            def jsonObj = jsonSlurper.parseText(configFile)
-
-            // Debugging: Print JSON structure
-//             echo "🔍 Parsed JSON: ${jsonObj.toString()}"
-
-            // Ensure 'docker_registry' exists and is a valid Map
-
-            // def dockerRegistry = jsonObj.docker_registry
-
-            // if (!dockerRegistry.containsKey('imageName') || !dockerRegistry.containsKey('imageTag')) {
-            //     error("❌ 'imageName' or 'imageTag' is missing in docker_registry.")
-            // }
+            def jsonObj = jsonSlurper.parseText(configFile.text)
 
             def dockerImage = jsonObj.imageName
             def imageTag =  jsonObj.imageTag
