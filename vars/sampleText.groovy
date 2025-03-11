@@ -15,11 +15,11 @@ def call(filePath) {
             echo "✅ Docker login successful."
 
             // ✅ Call checkImage only if login succeeds
-            return checkImage(filePath)
+            checkImage(filePath)
 
         } catch (Exception e) {
             echo "❌ Failed: ${e.message}"
-            return false
+
         }
     }
 }
