@@ -1,4 +1,4 @@
-// import groovy.json.JsonSlurper
+import groovy.json.JsonSlurper
 //
 // def call(pipeline) {
 //     withCredentials([usernamePassword(credentialsId: 'docker_login', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
