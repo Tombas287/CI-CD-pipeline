@@ -1,5 +1,7 @@
-{  
-    "imageName": "7002370412/myapp",
-    "imageTag": "a9e90c4"
-}
+{
+    "docker_registry":
+    {   "imageName": "7002370412/myapp",
+        "imageTag": "a9e90c4"
+    }
 
+}
