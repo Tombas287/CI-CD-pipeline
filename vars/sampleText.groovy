@@ -1,5 +1,4 @@
-import groovy.json.JsonSlurper
-
+import groovy.json.JsonSlurperClassic
 def call(filePath) {
     withCredentials([usernamePassword(credentialsId: 'docker_login', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
         try {
@@ -13,12 +12,13 @@ def call(filePath) {
             echo "✅ Docker login successful."
 
             // ✅ Call checkImage only if login succeeds
-            def output = checkImage(filePath)
+            def output = checker(filePath)
             echo "Image check result: ${output}"
             return output  // ✅ Return the result
 
         } catch (Exception e) {
             echo "❌ Failed: ${e.message}"
+            return false
 
         }
     }
