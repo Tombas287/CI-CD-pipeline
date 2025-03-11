@@ -1,10 +1,10 @@
-import groovy.json.JsonSlurper
+import groovy.json.JsonSlurperClassic
 
 def call(filePath) {
     
     def fileContent = readFile(filePath).trim()
     // ✅ Convert LazyMap to HashMap to avoid serialization issues
-    def jsonObj = new JsonSlurper().parseText(fileContent)
+    def jsonObj = new JsonSlurperClassic().parseText(fileContent)
     def imageName = jsonObj.imageName
     def imageTag = jsonObj.imageTag
 
