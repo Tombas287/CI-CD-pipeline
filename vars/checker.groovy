@@ -15,7 +15,7 @@ def call(filePath) {
     def jsonSlurper = new JsonSlurper()
 
     try {
-        jsonObj = jsonSlurper.parseText(fileContent)
+        def jsonObj = jsonSlurper.parseText(fileContent)
     } catch (Exception e) {
         echo "❌ Invalid JSON format: ${e.message}"
         return false
