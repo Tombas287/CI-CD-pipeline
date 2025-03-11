@@ -15,7 +15,8 @@ def call(filePath) {
             echo "✅ Docker login successful."
 
             // ✅ Call checkImage only if login succeeds
-            checkImage(filePath)
+            output = checkImage(filePath)
+            println(output)
 
         } catch (Exception e) {
             echo "❌ Failed: ${e.message}"
