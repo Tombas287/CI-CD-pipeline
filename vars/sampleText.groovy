@@ -14,23 +14,25 @@ def call(pipeline) {
 
             echo "✅ Docker login successful."
 
-            // Read and parse JSON file
-            def configFile = new File(pipeline)
-//             def sample = readFile('pipeline.json') // Replace with actual file
-            // def configFile = readJSON(file: pipeline)
-            echo "🔍 Raw JSON content: ${sample}" // Debug print
+            // ✅ FIX: Read JSON file properly using Jenkins readFile
+            def fileContent = readFile(pipeline).trim()
             def jsonSlurper = new JsonSlurper()
-            def jsonObj = jsonSlurper.parseText(configFile.text)
+            def jsonObj = jsonSlurper.parseText(fileContent)
 
-            def dockerImage = jsonObj.imageName
-            def imageTag =  jsonObj.imageTag
-            echo "🔍 Extracted imageName: ${jsonObj.imageName}"
-            echo "🔍 Extracted imageTag: ${jsonObj.imageTag}"
+            def dockerImage = jsonObj?.docker_registry?.imageName
+            def imageTag = jsonObj?.docker_registry?.imageTag
 
+            if (!dockerImage || !imageTag) {
+                error("❌ 'imageName' or 'imageTag' is missing in docker_registry.")
+            }
+
+            echo "🔍 Extracted imageName: ${dockerImage}"
+            echo "🔍 Extracted imageTag: ${imageTag}"
 
             echo "🔍 Checking if image exists: ${dockerImage}:${imageTag}"
 
-            def curlCommand = "curl -s -f https://hub.docker.com/v2/repositories/'${dockerImage}'/tags/'${imageTag}'"
+            // ✅ FIX: Corrected curl syntax
+            def curlCommand = "curl -s -o /dev/null -w '%{http_code}' https://hub.docker.com/v2/repositories/${dockerImage}/tags/${imageTag}"
             def httpCode = sh(script: curlCommand, returnStdout: true).trim()
 
             if (httpCode == "200") {
