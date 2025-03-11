@@ -12,17 +12,16 @@ def call(filePath) {
         return false
     }
 
-    // ✅ Ensure JsonSlurper is not stored as a variable to avoid serialization issues
-    def jsonObj = new JsonSlurper().parseText(fileContent)
-    def imageName = jsonObj.imageName
-    def imageTag = jsonObj.imageTag
+    // ✅ Convert LazyMap to HashMap to avoid serialization issues
+    def jsonObj = new JsonSlurper().parseText(fileContent) as Map
+    def imageName = jsonObj.imageName?.toString()
+    def imageTag = jsonObj.imageTag?.toString()
 
     if (!imageName?.trim() || !imageTag?.trim()) {
         echo "❌ Missing imageName or imageTag in JSON file."
         return false
     }
 
-    // ✅ Improved error handling
     try {
         def status = sh(script: "curl -s -f -o /dev/null https://hub.docker.com/v2/repositories/${imageName}/tags/${imageTag}", returnStatus: true)
 
