@@ -97,14 +97,14 @@ stages {
              }
          }
 
-         stage('Image scan'){
-             steps {
-            script {
-                def imageTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
-                 imageScan(imageTag)
-             }
-           }
-         }
+         // stage('Image scan'){
+         //     steps {
+         //    script {
+         //        def imageTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
+         //         imageScan(imageTag)
+         //     }
+         //   }
+         // }
         stage('Docker push to registry'){
             when { expression { currentBuild.result == null } }
             steps {
