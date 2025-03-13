@@ -4,7 +4,7 @@ def checkResourceQuota(String quotaName, String namespace ) {
     try {
         // Run the kubectl command
 //         def quotaJson = "kubectl get resourcequota ${quotaName} -n ${namespace} -o json".execute().text.trim()
-        def quotaJson = sh(script: kubectl get resourcequota ${quotaName} -n ${namespace} -o json, returnStdout: true).trim()
+        def quotaJson = sh(script: "kubectl get resourcequota ${quotaName} -n ${namespace} -o json", returnStdout: true).trim()
 
         if (!quotaJson?.trim()) {
             error("No output from kubectl command. Is Kubernetes running?")
