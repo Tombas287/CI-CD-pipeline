@@ -41,9 +41,9 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
-          volumeMounts:
-            - name: html-volume
-              mountPath: /usr/share/nginx/html
+#          volumeMounts:
+#            - name: html-volume
+#              mountPath: /usr/share/nginx/html
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:
