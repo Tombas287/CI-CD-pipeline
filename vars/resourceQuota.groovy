@@ -54,10 +54,13 @@ def extractValue(resourceValue, resourceType) {
     // Handle memory units (Gi, Mi, etc.)
     if (resourceValueStr.endsWith("Gi")) {
         resourceValueStr = resourceValueStr.replaceAll("Gi", "")
+        return resourceValueStr.toFloat()  // Return Gi in Gi
     } else if (resourceValueStr.endsWith("Mi")) {
         resourceValueStr = resourceValueStr.replaceAll("Mi", "")
+        return resourceValueStr.toFloat() / 1024  // Convert Mi to Gi
     }
 
+    // If no known unit suffix, return as float
     try {
         return resourceValueStr.toFloat()
     } catch (Exception e) {
