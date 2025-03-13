@@ -1,6 +1,6 @@
 import groovy.json.JsonSlurper
 
-def checkResourceQuota(String quotaName, String namespace ) {
+def call(String quotaName, String namespace ) {
     try {
         // Run the kubectl command
 //         def quotaJson = "kubectl get resourcequota ${quotaName} -n ${namespace} -o json".execute().text.trim()
@@ -40,4 +40,4 @@ def checkResourceQuota(String quotaName, String namespace ) {
 }
 
 // ✅ Correct Function Call
-checkResourceQuota("my-quota", "default")
+
