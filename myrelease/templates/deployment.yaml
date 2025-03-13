@@ -23,30 +23,23 @@ spec:
       serviceAccountName: {{ include "myrelease.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      initContainers:
-        - name: init-html
-          image: busybox
-          command: ["/bin/sh", "-c"]
-          args:
-            - 'echo "{{ .Values.initContainer.htmlContent }}" > /usr/share/nginx/html/index.html'
-          resources:
-            requests:
-              cpu: "{{ .Values.resources.requests.cpu }}"
-              memory: "{{ .Values.resources.requests.memory  }}"
-            limits:
-              cpu: "{{ .Values.resources.limits.cpu  }}"
-              memory: "{{ .Values.resources.limits.memory  }}"
-          volumeMounts:
-            - name: html-volume
-              mountPath: /usr/share/nginx/html
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
+#      initContainers:
+#        - name: init-html
+#          image: busybox
+#          command: ["/bin/sh", "-c"]
+#          args:
+#            - 'echo "{{ .Values.initContainer.htmlContent }}" > /usr/share/nginx/html/index.html'
+
+#            - name: html-volume
+#              mountPath: /usr/share/nginx/html
+#          securityContext:
+#            {{- toYaml .Values.securityContext | nindent 12 }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8080
               protocol: TCP
           volumeMounts:
             - name: html-volume
@@ -64,9 +57,9 @@ spec:
               memory: "{{ .Values.resources.limits.memory }}"
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-      volumes:
-        - name: html-volume
-          emptyDir: {}
+#      volumes:
+#        - name: html-volume
+#          emptyDir: {}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
