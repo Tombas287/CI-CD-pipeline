@@ -1,6 +1,6 @@
 import groovy.json.JsonSlurper
 
-def checkResourceQuota(String quotaName, String namespace) {
+def call(String quotaName, String namespace) {
     try {
         // Run the kubectl command to get the resource quota in JSON format
         def quotaJson = sh(script: "kubectl get resourcequota ${quotaName} -n ${namespace} -o json", returnStdout: true).trim()
