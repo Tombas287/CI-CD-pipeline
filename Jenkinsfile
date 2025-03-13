@@ -16,6 +16,7 @@ pipeline {
         USERNAME = "7002370412"
         ENVIRONMENT = 'dev'   
         PIPELINE_FILE = "${env.WORKSPACE}/pipeline.json"
+        GIT_COMMIT_SHA = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
 
     }
 stages {
