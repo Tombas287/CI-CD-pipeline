@@ -19,19 +19,19 @@ pipeline {
 
     }
 stages {
-    stage('Sample text') {
-            steps {
-                script {
-                   def jsonFilePath = "pipeline.json"
-                   sampleText(jsonFilePath)
+    // stage('Sample text') {
+    //         steps {
+    //             script {
+    //                def jsonFilePath = "pipeline.json"
+    //                sampleText(jsonFilePath)
 
                     
-                    // def dockerDetails = sampleText.getDockerDetails(jsonFilePath)
-                    // echo "Docker Image: ${dockerDetails.image}"
-                    // echo "Docker Tag: ${dockerDetails.tag}"
-                }
-            }
-        }
+    //                 // def dockerDetails = sampleText.getDockerDetails(jsonFilePath)
+    //                 // echo "Docker Image: ${dockerDetails.image}"
+    //                 // echo "Docker Tag: ${dockerDetails.tag}"
+    //             }
+    //         }
+    //     }
 
         stage('Set Commit SHA') {
              steps {
@@ -86,33 +86,33 @@ stages {
 
         //     }
 
-        // stage('Build and Tag Docker Image') {
-        //     when { expression { currentBuild.result == null } }
-        //      steps {
-        //          script {
-        //              def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
-        //              buildAndTagImage(dockerTag)
-        //          }
-        //      }
-        //  }
+        stage('Build and Tag Docker Image') {
+            when { expression { currentBuild.result == null } }
+             steps {
+                 script {
+                     def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
+                     buildAndTagImage(dockerTag)
+                 }
+             }
+         }
 
-         // stage('Image scan'){
-         //     steps {
-         //    script {
-         //        def imageTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
-         //         imageScan(imageTag)
-         //     }
-         //   }
-         // }
-        // stage('Docker push to registry'){
-        //     when { expression { currentBuild.result == null } }
-        //     steps {
-        //         script {
-        //             def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
-        //             dockerPush(dockerTag)
-        //         }
-        //     }
-        // }
+         stage('Image scan'){
+             steps {
+            script {
+                def imageTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
+                 imageScan(imageTag)
+             }
+           }
+         }
+        stage('Docker push to registry'){
+            when { expression { currentBuild.result == null } }
+            steps {
+                script {
+                    def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
+                    dockerPush(dockerTag)
+                }
+            }
+        }
         // // stage('Aks deployer Dev') {
         //     steps {
         //         script {
@@ -123,16 +123,16 @@ stages {
         //         }
         //     }
         // }
-        // stage('Aks deployer qa') {
-        //     steps {
-        //         script {
+        stage('Aks deployer qa') {
+            steps {
+                script {
 
-        //             def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
-        //             def imageTag = "bfca98a"
-        //             AKSdeployer('qa', 'credentials',dockerImage, imageTag )
-        //         }
-        //     }
-        // }
+                    def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
+                    def imageTag = "bfca98a"
+                    AKSdeployer('qa', 'credentials',dockerImage, imageTag )
+                }
+            }
+        }
         // stage('Aks deployer preprod') {
         //     steps {
         //         script {
@@ -143,36 +143,36 @@ stages {
         //         }
         //     }
         // }
-        // stage('Aks deployer prod') {
-        //     steps {
-        //         script {
-        //                def userInput = input(
-        //                message: 'proceed with prod deployment?',
-        //                parameters : [booleanParam(name: 'Confirm', defaultValue: false, description: 'Yes proceed')]
-        //                )
+        stage('Aks deployer prod') {
+            steps {
+                script {
+                       def userInput = input(
+                       message: 'proceed with prod deployment?',
+                       parameters : [booleanParam(name: 'Confirm', defaultValue: false, description: 'Yes proceed')]
+                       )
 
-        //                if (userInput) {
-        //                        def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
-        //                        def imageTag = "bfca98a"
-        //                        AKSdeployer('prod', 'credentials',dockerImage, imageTag )
-        //                }
-        //                else {
-        //                   error("Deployment aborted by user.")
-        //                }
-        //        }
-        //    }
+                       if (userInput) {
+                               def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
+                               def imageTag = "bfca98a"
+                               AKSdeployer('prod', 'credentials',dockerImage, imageTag )
+                       }
+                       else {
+                          error("Deployment aborted by user.")
+                       }
+               }
+           }
         }
 
     }
 
-//     post {
-//         success {
-//             script {
-//                 sh "docker rmi -f ${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
-//             }
-//         }
-//         failure {
-//             echo "Build failed"
-//         }
-//     }
-// }
+    post {
+        success {
+            script {
+                sh "docker rmi -f ${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
+            }
+        }
+        failure {
+            echo "Build failed"
+        }
+    }
+}
