@@ -153,7 +153,7 @@ stages {
 
                        if (userInput) {
                                def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
-                               def imageTag = "bfca98a"
+                               def imageTag = "$env.GIT_COMMIT_SHA}"
                                AKSdeployer('prod', 'credentials',dockerImage, imageTag )
                        }
                        else {
