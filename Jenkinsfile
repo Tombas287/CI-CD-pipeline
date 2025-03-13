@@ -34,13 +34,13 @@ stages {
     //         }
     //     }
 
-        stage('Set Commit SHA') {
-             steps {
-                 script {
-                     env.GIT_COMMIT_SHA = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-                 }
-             }
-         }
+       // stage('Set Commit SHA') {
+        //     steps {
+        //         script {
+        //             env.GIT_COMMIT_SHA = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+        //         }
+       //      }
+      //   }
          // stage('Pip Builder'){
          //     steps {
          //         script {
