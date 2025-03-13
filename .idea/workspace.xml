@@ -5,7 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7ba13500-2485-48cf-92f1-d5e0ac2496fc" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/myrelease/templates/resourcequota.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vars/resourceQuota.groovy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/myrelease/templates/deployment.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/myrelease/templates/deployment.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/myrelease/templates/service.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/myrelease/templates/service.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/myrelease/values.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/myrelease/values.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

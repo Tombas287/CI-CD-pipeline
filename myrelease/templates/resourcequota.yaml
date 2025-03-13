@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: my-quota
+#  namespace: {{ .Values.namespace | default "default" }}
+spec:
+  hard:
+    requests.cpu: "{{ .Values.resourceQuota.hard.requests.cpu | default "1" }}"
+    requests.memory: "{{ .Values.resourceQuota.hard.requests.memory | default "1Gi" }}"
+    limits.cpu: "{{ .Values.resourceQuota.hard.limits.cpu | default "2" }}"
+    limits.memory: "{{ .Values.resourceQuota.hard.limits.memory | default "2Gi" }}"

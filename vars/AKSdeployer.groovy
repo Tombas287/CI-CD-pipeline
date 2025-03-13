@@ -19,6 +19,7 @@ def call(String environment, String credentials, String dockerImage , String ima
                             --set image.repository=${dockerImage} \
                             --set image.tag=${imageTag}
                     """
+                    checkResourceQuota("my-quota", "default")
                 }
                else {
                   error "❌ Image not found in the registry. Deployment to PROD is not allowed!"
@@ -30,8 +31,9 @@ def call(String environment, String credentials, String dockerImage , String ima
                 sh """
                     helm upgrade --install my-app-release-${environment} myrelease \
                         --set image.repository=${dockerImage} \
-                        --set image.tag=${imageTag}            
+                        --set image.tag=${imageTag}
            """
+           checkResourceQuota("my-quota", "default")
             } else {
                 echo "🚀 Image not found..."
                 
