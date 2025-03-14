@@ -16,7 +16,8 @@ pipeline {
         USERNAME = "7002370412"
         ENVIRONMENT = 'dev'   
         PIPELINE_FILE = "${env.WORKSPACE}/pipeline.json"
-        GIT_COMMIT_SHA = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+        // GIT_COMMIT_SHA = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+        GIT_COMMIT_SHA = "af37813"
 
     }
 stages {
@@ -87,15 +88,15 @@ stages {
 
         //     }
 
-        stage('Build and Tag Docker Image') {
-            when { expression { currentBuild.result == null } }
-             steps {
-                 script {
-                     def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
-                     buildAndTagImage(dockerTag)
-                 }
-             }
-         }
+        // stage('Build and Tag Docker Image') {
+        //     when { expression { currentBuild.result == null } }
+        //      steps {
+        //          script {
+        //              def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
+        //              buildAndTagImage(dockerTag)
+        //          }
+        //      }
+        //  }
 
          // stage('Image scan'){
          //     steps {
@@ -105,15 +106,15 @@ stages {
          //     }
          //   }
          // }
-        stage('Docker push to registry'){
-            when { expression { currentBuild.result == null } }
-            steps {
-                script {
-                    def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
-                    dockerPush(dockerTag)
-                }
-            }
-        }
+        // stage('Docker push to registry'){
+        //     when { expression { currentBuild.result == null } }
+        //     steps {
+        //         script {
+        //             def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
+        //             dockerPush(dockerTag)
+        //         }
+        //     }
+        // }
         // // stage('Aks deployer Dev') {
         //     steps {
         //         script {
