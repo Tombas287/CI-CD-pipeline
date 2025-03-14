@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "myrelease.fullname" . }}
+  namespace: {{ .Values.namespace | default "default" }}
   labels:
     {{- include "myrelease.labels" . | nindent 4 }}
 spec:
