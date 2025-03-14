@@ -21,7 +21,7 @@ def call(String environment, String credentials, String dockerImage , String ima
                             --set namespace=${environment}
                             
                     """
-                    resourceQuota("my-quota", "default")
+                    resourceQuota("my-quota", environment)
                 }
                else {
                   error "❌ Image not found in the registry. Deployment to PROD is not allowed!"
@@ -38,7 +38,7 @@ def call(String environment, String credentials, String dockerImage , String ima
                         
                         
            """
-           resourceQuota("my-quota", "default")
+           resourceQuota("my-quota", environment)
             } else {
                 echo "🚀 Image not found..."
                 
