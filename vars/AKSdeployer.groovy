@@ -17,8 +17,8 @@ def call(String environment, String credentials, String dockerImage , String ima
                     sh """
                         helm upgrade --install my-release-${environment} myrelease \
                             --set image.repository=${dockerImage} \
-                            --set image.tag=${imageTag} \
-                            --set namespaces=${environment}
+                            --set image.tag=${imageTag} 
+                            
                     """
                     resourceQuota("my-quota", "default")
                 }
@@ -32,8 +32,8 @@ def call(String environment, String credentials, String dockerImage , String ima
                 sh """
                     helm upgrade --install my-app-release-${environment} myrelease \
                         --set image.repository=${dockerImage} \
-                        --set image.tag=${imageTag} \
-                        --set namespaces=${environment}
+                        --set image.tag=${imageTag} 
+                        
            """
            resourceQuota("my-quota", "default")
             } else {
