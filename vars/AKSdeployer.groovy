@@ -29,7 +29,7 @@ def call(String environment, String credentials, String dockerImage, String imag
                 if (imageExists) {
                     echo "✅ Image exists. Deploying to ${environment}..."
                     sh """
-                        helm upgrade --install my-release-${environment} myrelease \
+                        helm upgrade --install my-app-release-${environment} myrelease \
                             --set image.repository=${finalImage} \
                             --set image.tag=${finalTag} \
                             --set namespace=${environment} \
@@ -57,7 +57,7 @@ def call(String environment, String credentials, String dockerImage, String imag
                 error "❌ Invalid environment: ${environment}"
             }
             // Trigger rollback if enabled
-            blueGreenDeployment("my-release-${environment}", environment)
+            blueGreenDeployment("my-app-release-${environment}", environment)
         
         }
     }
