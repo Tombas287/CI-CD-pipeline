@@ -129,8 +129,8 @@ stages {
             steps {
                 script {
 
-                    def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
-                    def imageTag = "${env.GIT_COMMIT_SHA}"
+                    def dockerImage = ""
+                    def imageTag = ""
                     AKSdeployer('qa', 'credentials',dockerImage, imageTag, PIPELINE_FILE)
                 }
             }
@@ -154,8 +154,8 @@ stages {
                        )
 
                        if (userInput) {
-                               def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
-                               def imageTag = "${env.GIT_COMMIT_SHA}"
+                               def dockerImage = ""
+                               def imageTag = ""
                                AKSdeployer('prod', 'credentials',dockerImage, imageTag, PIPELINE_FILE)
                        }
                        else {
