@@ -30,7 +30,7 @@ def call(String environment, String credentials, String dockerImage, String imag
                     echo "✅ Image exists. Deploying to ${environment}..."
                     deploy(environment, finalImage, finalTag)
                     resourceQuota("my-quota", environment)
-                    blueGreenDeployment("my-app-release-${environment}", environment)
+                    // blueGreenDeployment("my-app-release-${environment}", environment)
                 } else {
                     error "❌ Image not found in the registry. Deployment to PROD is not allowed!"
                 }
@@ -41,7 +41,7 @@ def call(String environment, String credentials, String dockerImage, String imag
                     echo "🚀 Deploying to ${env}..."
                     deploy(env, finalImage, finalTag)
                     echo "⏳ Waiting for 2 minutes before proceeding to the next environment..."
-                    sleep(time: 2, unit: 'MINUTES')
+                    sleep(time: 30, unit: 'SECONDS')
                     }
                 } else {
                     echo "🚀 Image not found. Proceeding with alternative flow..."
@@ -67,7 +67,7 @@ def deploy(String environment, String image, String tag) {
                 --namespace=${environment}
         """
         resourceQuota("my-quota", environment)
-        blueGreenDeployment("my-app-release-${environment}", environment)
+        // blueGreenDeployment("my-app-release-${environment}", environment)
     } catch (Exception e) {
         echo "❌ Deployment failed for ${environment}. Rolling back..."
         // rollbackHelm(environment)
