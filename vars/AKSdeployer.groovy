@@ -37,7 +37,7 @@ def call(String environment, String credentials, String dockerImage, String imag
             } else if (nonProdEnv.contains(environment)) {
                 if (imageExists) {
                     echo "✅ Image exists. Deploying existing image to ${environment}."
-                    for (env in nonProdEnvs) {
+                    for (env in nonProdEnv) {
                     echo "🚀 Deploying to ${env}..."
                     deploy(env, finalImage, finalTag)
                     echo "⏳ Waiting for 2 minutes before proceeding to the next environment..."
