@@ -28,9 +28,11 @@ def selectHelmVersion(String releaseName, String namespace) {
     }
 
     // Display available Helm versions
-    println "Available Helm Versions:"
-    history.each { entry ->
-        println "[Release name: ${entry.name} -- ${entry.revision}] Deployed on: ${entry.updated} - Status: ${entry.status}"
+    if (!history.isEmpty()) {
+        println "Available Helm Versions:"
+        history.each { entry ->
+            println "[Release name: ${entry.name} -- ${entry.revision}] Deployed on: ${entry.updated} - Status: ${entry.status}"
+        }
     }
 
     // Prompt user to select a version for rollback
