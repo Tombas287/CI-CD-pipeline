@@ -57,7 +57,7 @@ def call(String environment, String credentials, String dockerImage, String imag
                 error "❌ Invalid environment: ${environment}"
             }
             // Trigger rollback if enabled
-            blueGreenDeployment("my-app-release-${environment}", environment)
+            // blueGreenDeployment("my-app-release-${environment}", environment)
         
         }
     }
