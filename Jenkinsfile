@@ -175,8 +175,8 @@ stages {
             script {
                 sh "docker rmi -f ${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"                
             }
+            echo "Job success"
             emailext (
-                echo "Job success"
                 to: 'mintu2831@gmail.com',
                 subject: "✅ Build Successful",
                 body: "Job: ${env.JOB_NAME}\nBuild: ${env.BUILD_NUMBER}"
