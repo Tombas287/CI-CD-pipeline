@@ -23,6 +23,8 @@ def call(String environment, String credentials, String dockerImage, String imag
             // Determine final image and tag
             def finalImage = dockerImage ?: jsonObj.imageName
             def finalTag = imageTag ?: jsonObj.imageTag
+            println(finalImage)
+            println(finalTag)
 
             // Check if the image exists in the registry
             def imageExists = imageExist(finalImage, finalTag)
