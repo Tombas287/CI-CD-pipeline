@@ -122,7 +122,7 @@ stages {
                     def dockerImage = ""
                     def imageTag = ""
                     def PIPELINE_FILE = "${env.PIPELINE_FILE}"
-                    AKSdeployer('dev', 'kubeconfig1',dockerImage, imageTag, PIPELINE_FILE)
+                    AKSdeployer('dev', 'credentials',dockerImage, imageTag, PIPELINE_FILE)
                 }
             }
         }
