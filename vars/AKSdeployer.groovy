@@ -1,4 +1,4 @@
-import groovy.json.JsonSlurper
+import groovy.json.JsonSlurperClassic
 
 def call(String environment, String credentials, String dockerImage, String imageTag, String pipeline) {
     if (!environment || !credentials || !pipeline) {
@@ -16,8 +16,8 @@ def call(String environment, String credentials, String dockerImage, String imag
             """
 
             // Parse pipeline JSON file
-            def configFile = readFile(pipeline)
-            def jsonslurper = new JsonSlurper()
+            def configFile = readFile(pipeline).trim()
+            def jsonslurper = new JsonSlurperClassic()
             def jsonObj = jsonslurper.parseText(configFile)
 
             // Determine final image and tag
