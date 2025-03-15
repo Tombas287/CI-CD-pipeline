@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 def call(String environment, String credentials, String dockerImage , String imageTag) {
     withCredentials([file(credentialsId: credentials, variable: 'KUBECONFIG')]) {
         script {
@@ -9,19 +11,25 @@ def call(String environment, String credentials, String dockerImage , String ima
             helm version
             """
             // Check if image exists
-            def imageExists = imageExist(dockerImage, imageTag)
+            def configFile = readFile('pipeline.json')
+            def jsonslurper = new JsonSlurper()
+            def jsonObj = jsonslurper.parseText(configFile)
+            def finalImage = dockerImage ?: jsonObj.imageName
+            def finalTag = imageTag ?: jsonObj.imageTag
+            def imageExists = imageExist(finalImage, finalTag)
+
+
             def nonProdEnv = ["dev", "preprod", "qa"]
             if (environment == "prod") {
                 if (imageExists) {
                     echo "✅ Image exists.deploying to ${environment}"
+
                     sh """
-                        helm upgrade --install my-release-${environment} myrelease \
-                            --set image.repository=${dockerImage} \
-                            --set image.tag=${imageTag} \
-                            --set namespace=${environment}
-                            
+                        helm install my-release-${environment} myrelease \
+                            --set image.repository=${finalImage} \
+                            --set image.tag=${finalTag}
                     """
-                    resourceQuota("my-quota", environment)
+                    resourceQuota("my-quota", "default")
                 }
                else {
                   error "❌ Image not found in the registry. Deployment to PROD is not allowed!"
@@ -32,11 +40,8 @@ def call(String environment, String credentials, String dockerImage , String ima
                 echo "✅ Image exists. Deploying existing image to ${environment}."
                 sh """
                     helm upgrade --install my-app-release-${environment} myrelease \
-                        --set image.repository=${dockerImage} \
-                        --set image.tag=${imageTag} \
-                        --set namespace=${environment}
-                        
-                        
+                        --set image.repository=${finalImage} \
+                        --set image.tag=${finalTag}
            """
            resourceQuota("my-quota", environment)
             } else {
