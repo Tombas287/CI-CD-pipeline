@@ -1,3 +1,12 @@
+def call(String releaseName, String namespace){    
+    
+    def selectedVersion = selectHelmVersion(releaseName, namespace)
+    println("Rolling back to version: ${selectedVersion}")
+    rollbackHelm(releaseName, namespace, selectedVersion)
+    
+}
+
+
 def getHelmReleaseVersions(String releaseName, String namespace) {
     // Fetch Helm release history in JSON format
     def historyJson = sh(script: "helm history ${releaseName} -n ${namespace} -o json", returnStdout: true).trim()
@@ -36,6 +45,4 @@ def selectHelmVersion(String releaseName, String namespace) {
 }
 
 // Example usage
-def selectedVersion = selectHelmVersion(releaseName, namespace)
-println("Rolling back to version: ${selectedVersion}")
-rollbackHelm(releaseName, namespace, selectedVersion)
+
