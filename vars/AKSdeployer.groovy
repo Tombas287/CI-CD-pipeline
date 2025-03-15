@@ -1,4 +1,4 @@
-import groovy.json.JsonSlurper
+import groovy.json.JsonSlurperClassic
 
 def call(String environment, String credentials, String dockerImage , String imageTag, String pipeline) {
     withCredentials([file(credentialsId: credentials, variable: 'KUBECONFIG')]) {
@@ -11,7 +11,7 @@ def call(String environment, String credentials, String dockerImage , String ima
             helm version
             """
             // Check if image exists
-            def jsonslurper = new JsonSlurper()
+            def jsonslurper = new JsonSlurperClassic()
             def configFile = readFile(pipeline)
             def jsonObj = jsonslurper.parseText(configFile)
             def finalImage = dockerImage ?: jsonObj.imageName
