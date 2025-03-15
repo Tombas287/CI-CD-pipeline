@@ -23,10 +23,10 @@ def call(String environment, String credentials, String dockerImage, String imag
             // Determine final image and tag
             def finalImage = dockerImage ?: jsonObj.imageName
             def finalTag = imageTag ?: jsonObj.imageTag
-            println(finalImage)
-            println(finalTag)
+            println("Final Image: ${finalImage}")
+            println("Final Tag: ${finalTag}")
 
-            // Check if the image exists in the registry
+            // Check if the image exists in Docker Hub
             def imageExists = imageExist(finalImage, finalTag)
 
             def nonProdEnv = ["dev", "preprod", "qa"]
@@ -59,5 +59,12 @@ def call(String environment, String credentials, String dockerImage, String imag
                 error "❌ Invalid environment: ${environment}"
             }
         }
+    }
+}
+
+def imageExist(image, tag) {
+    return script {
+        def statusCode = sh(script: "curl -s -o /dev/null -w \"%{http_code}\" https://hub.docker.com/v2/repositories/${image}/tags/${tag}", returnStdout: true).trim()
+        return statusCode == '200'
     }
 }
