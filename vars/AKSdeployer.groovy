@@ -32,6 +32,7 @@ def call(String environment, String credentials, String dockerImage, String imag
                         helm upgrade --install my-release-${environment} myrelease \
                             --set image.repository=${finalImage} \
                             --set image.tag=${finalTag} \
+                            --set namespace=${environment} \
                             --namespace=${environment}
                     """
                     resourceQuota("my-quota", environment)
@@ -45,6 +46,7 @@ def call(String environment, String credentials, String dockerImage, String imag
                         helm upgrade --install my-app-release-${environment} myrelease \
                             --set image.repository=${finalImage} \
                             --set image.tag=${finalTag} \
+                            --set namespace=${environment} \
                             --namespace=${environment}
                     """
                     resourceQuota("my-quota", environment)
