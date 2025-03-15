@@ -36,6 +36,7 @@ def call(String environment, String credentials, String dockerImage, String imag
                             --namespace=${environment}
                     """
                     resourceQuota("my-quota", environment)
+                    blueGreenDeployment("my-app-release-${environment}", environment)
                 } else {
                     error "❌ Image not found in the registry. Deployment to PROD is not allowed!"
                 }
@@ -50,6 +51,7 @@ def call(String environment, String credentials, String dockerImage, String imag
                             --namespace=${environment}
                     """
                     resourceQuota("my-quota", environment)
+                    blueGreenDeployment("my-app-release-${environment}", environment)
                 } else {
                     echo "🚀 Image not found. Proceeding with alternative flow..."
                 }
@@ -57,7 +59,7 @@ def call(String environment, String credentials, String dockerImage, String imag
                 error "❌ Invalid environment: ${environment}"
             }
             // Trigger rollback if enabled
-            // blueGreenDeployment("my-app-release-${environment}", environment)
+            
         
         }
     }
