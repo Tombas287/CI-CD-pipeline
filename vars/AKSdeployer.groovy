@@ -70,7 +70,7 @@ def deploy(String environment, String image, String tag) {
         blueGreenDeployment("my-app-release-${environment}", environment)
     } catch (Exception e) {
         echo "❌ Deployment failed for ${environment}. Rolling back..."
-        rollbackHelm(environment)
+        // rollbackHelm(environment)
         error "❌ Deployment failed: ${e.message}"
     }
 }
