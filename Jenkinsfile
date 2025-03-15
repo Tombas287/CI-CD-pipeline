@@ -115,7 +115,7 @@ stages {
         //         }
         //     }
         // }
-        // stage('Aks deployer Dev') {
+        stage('Aks deployer Dev') {
             steps {
                 script {
 
