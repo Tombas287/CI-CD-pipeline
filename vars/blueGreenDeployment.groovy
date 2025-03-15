@@ -56,12 +56,13 @@ def selectHelmVersion(String releaseName, String namespace) {
     }
 
     // Prompt user to select a version for rollback
-    def selectedVersion = input(
+    def selectedVersion = timeout(time: 30, unit: 'SECONDS') {
+        input(
         message: "Select Helm version for rollback",
         parameters: [
             choice(name: 'Versions', choices: history.collect { it.revision.toString() }, description: "Choose Helm version to rollback")
         ]
     )
-
+    }
     return selectedVersion.toInteger()
 }
