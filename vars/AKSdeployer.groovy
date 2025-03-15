@@ -39,7 +39,7 @@ def call(String environment, String credentials, String dockerImage, String imag
                             --set image.repository=${finalImage} \
                             --set image.tag=${finalTag}
                     """
-                    resourceQuota("my-quota", "default")
+                    resourceQuota("my-quota", environment)
                 } else {
                     error "❌ Image not found in the registry. Deployment to PROD is not allowed!"
                 }
