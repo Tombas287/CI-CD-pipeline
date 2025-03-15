@@ -129,9 +129,9 @@ stages {
             steps {
                 script {
 
-                    def dockerImage = ""
-                    def imageTag = ""
-                    AKSdeployer('qa', 'credentials',dockerImage, imageTag, PIPELINE_FILE)
+                    def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
+                    def imageTag = "${env.GIT_COMMIT_SHA}"
+                    AKSdeployer('qa', 'credentials',dockerImage, imageTag)
                 }
             }
         }
@@ -154,9 +154,9 @@ stages {
                        )
 
                        if (userInput) {
-                               def dockerImage = ""
-                               def imageTag = ""
-                               AKSdeployer('prod', 'credentials',dockerImage, imageTag, PIPELINE_FILE)
+                               def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
+                               def imageTag = "{env.GIT_COMMIT_SHA}"
+                               AKSdeployer('prod', 'credentials',dockerImage, imageTag)
                        }
                        else {
                           error("Deployment aborted by user.")
