@@ -115,22 +115,23 @@ stages {
         //         }
         //     }
         // }
-        // // stage('Aks deployer Dev') {
-        //     steps {
-        //         script {
+        // stage('Aks deployer Dev') {
+            steps {
+                script {
 
-        //             def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
-        //             def imageTag = "${env.GIT_COMMIT_SHA}"
-        //             AKSdeployer('dev', 'kubeconfig1',dockerImage, imageTag )
-        //         }
-        //     }
-        // }
+                    def dockerImage = ""
+                    def imageTag = ""
+                    def PIPELINE_FILE = "${env.PIPELINE_FILE}"
+                    AKSdeployer('dev', 'kubeconfig1',dockerImage, imageTag, PIPELINE_FILE)
+                }
+            }
+        }
         stage('Aks deployer qa') {
             steps {
                 script {
 
-                    def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
-                    def imageTag = "${env.GIT_COMMIT_SHA}"
+                    def dockerImage = ""
+                    def imageTag = ""
                     def PIPELINE_FILE = "${env.PIPELINE_FILE}"
                     AKSdeployer('qa', 'credentials',dockerImage, imageTag,PIPELINE_FILE)
                 }
@@ -155,8 +156,8 @@ stages {
                        )
 
                        if (userInput) {
-                               def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
-                               def imageTag = "${env.GIT_COMMIT_SHA}"
+                               def dockerImage = ""
+                               def imageTag = ""
                                def PIPELINE_FILE = "${env.PIPELINE_FILE}"
                                AKSdeployer('prod', 'credentials',dockerImage, imageTag, PIPELINE_FILE)
                        }
