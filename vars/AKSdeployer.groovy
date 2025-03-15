@@ -11,8 +11,8 @@ def call(String environment, String credentials, String dockerImage , String ima
             helm version
             """
             // Check if image exists
-            def configFile = readFile(pipeline)
             def jsonslurper = new JsonSlurper()
+            def configFile = readFile(pipeline)
             def jsonObj = jsonslurper.parseText(configFile)
             def finalImage = dockerImage ?: jsonObj.imageName
             def finalTag = imageTag ?: jsonObj.imageTag
