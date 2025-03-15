@@ -6,11 +6,14 @@ def call(String releaseName, String namespace){
     
 }
 
-
 def getHelmReleaseVersions(String releaseName, String namespace) {
-    // Fetch Helm release history in JSON format
-    def historyJson = sh(script: "helm history ${releaseName} -n ${namespace} -o json", returnStdout: true).trim()
-    return readJSON(text: historyJson)
+    try {
+        // Fetch Helm history in JSON format
+        def historyJson = sh(script: "helm history ${releaseName} -n ${namespace} -o json", returnStdout: true).trim()
+        return readJSON(text: historyJson)
+    } catch (Exception e) {
+        error "Helm release '${releaseName}' not found in namespace '${namespace}'"
+    }
 }
 
 def rollbackHelm(String releaseName, String namespace, int version) {
@@ -23,16 +26,20 @@ def selectHelmVersion(String releaseName, String namespace) {
     def history = getHelmReleaseVersions(releaseName, namespace)
     
     // Check if history is empty
-    if (history.isEmpty()) {
-        error "No Helm releases found for ${namespace}"
+    if (!history || history.isEmpty()) {
+        error "No Helm releases found for ${releaseName} in namespace ${namespace}"
+    }
+
+    // If only one revision exists, rollback is not possible
+    if (history.size() == 1) {
+        println "Only one Helm revision found. No rollback possible."
+        return history[0].revision.toInteger()
     }
 
     // Display available Helm versions
-    if (!history.isEmpty()) {
-        println "Available Helm Versions:"
-        history.each { entry ->
-            println "[Release name: ${entry.name} -- ${entry.revision}] Deployed on: ${entry.updated} - Status: ${entry.status}"
-        }
+    println "Available Helm Versions:"
+    history.each { entry ->
+        println "[Release name: ${entry.name} -- ${entry.revision}] Deployed on: ${entry.updated} - Status: ${entry.status}"
     }
 
     // Prompt user to select a version for rollback
@@ -45,6 +52,4 @@ def selectHelmVersion(String releaseName, String namespace) {
 
     return selectedVersion.toInteger()
 }
-
-// Example usage
 
