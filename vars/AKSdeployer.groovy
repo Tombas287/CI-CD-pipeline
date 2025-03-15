@@ -28,13 +28,7 @@ def call(String environment, String credentials, String dockerImage, String imag
             if (environment == "prod") {
                 if (imageExists) {
                     echo "✅ Image exists. Deploying to ${environment}..."
-                    sh """
-                        helm upgrade --install my-app-release-${environment} myrelease \
-                            --set image.repository=${finalImage} \
-                            --set image.tag=${finalTag} \
-                            --set namespace=${environment} \
-                            --namespace=${environment}
-                    """
+                    deploy(environment, finalImage, finalTag)
                     resourceQuota("my-quota", environment)
                     blueGreenDeployment("my-app-release-${environment}", environment)
                 } else {
@@ -43,15 +37,7 @@ def call(String environment, String credentials, String dockerImage, String imag
             } else if (nonProdEnv.contains(environment)) {
                 if (imageExists) {
                     echo "✅ Image exists. Deploying existing image to ${environment}."
-                    sh """
-                        helm upgrade --install my-app-release-${environment} myrelease \
-                            --set image.repository=${finalImage} \
-                            --set image.tag=${finalTag} \
-                            --set namespace=${environment} \
-                            --namespace=${environment}
-                    """
-                    resourceQuota("my-quota", environment)
-                    blueGreenDeployment("my-app-release-${environment}", environment)
+                    deploy(environment, finalImage, finalTag)
                 } else {
                     echo "🚀 Image not found. Proceeding with alternative flow..."
                 }
@@ -64,6 +50,26 @@ def call(String environment, String credentials, String dockerImage, String imag
         }
     }
 }
+
+def deploy(String environment, String image, String tag) {
+    try {
+        echo "✅ Image exists. Deploying to ${environment}..."
+        sh """
+            helm upgrade --install my-app-release-${environment} myrelease \
+                --set image.repository=${image} \
+                --set image.tag=${tag} \
+                --set namespace=${environment} \
+                --namespace=${environment}
+        """
+        resourceQuota("my-quota", environment)
+        blueGreenDeployment("my-app-release-${environment}", environment)
+    } catch (Exception e) {
+        echo "❌ Deployment failed for ${environment}. Rolling back..."
+        rollbackHelm(environment)
+        error "❌ Deployment failed: ${e.message}"
+    }
+}
+
 
 def fetchImage(String pipeline) {
     def configFile = readFile(pipeline).trim()
