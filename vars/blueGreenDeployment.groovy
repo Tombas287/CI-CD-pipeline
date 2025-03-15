@@ -1,3 +1,4 @@
+import groovy.json.JsonSlurper
 def call(String releaseName, String namespace){    
     
     def selectedVersion = selectHelmVersion(releaseName, namespace)
@@ -10,7 +11,9 @@ def getHelmReleaseVersions(String releaseName, String namespace) {
     try {
         // Fetch Helm history in JSON format
         def historyJson = sh(script: "helm history ${releaseName} -n ${namespace} -o json", returnStdout: true).trim()
-        return readJSON(text: historyJson)
+        def jsonSlurper = new JsonSlurper()
+        return jsonSlurper.parseText(historyJson)
+        // return readJSON(text: historyJson)
     } catch (Exception e) {
         error "Helm release '${releaseName}' not found in namespace '${namespace}'"
     }
