@@ -1,10 +1,4 @@
-import groovy.json.JsonSlurperClassic
-
-def call(String environment, String credentials, String dockerImage, String imageTag, String pipeline) {
-    if (!environment || !credentials || !pipeline) {
-        error "❌ Missing required parameters!"
-    }
-
+def call(String environment, String credentials, String dockerImage , String imageTag) {
     withCredentials([file(credentialsId: credentials, variable: 'KUBECONFIG')]) {
         script {
             echo "✅ Setting KUBECONFIG..."
@@ -14,51 +8,44 @@ def call(String environment, String credentials, String dockerImage, String imag
             kubectl config get-contexts
             helm version
             """
-
-            // Parse pipeline JSON file
-            def configFile = readFile(pipeline).trim()
-            def jsonslurper = new JsonSlurperClassic()
-            def jsonObj = jsonslurper.parseText(configFile)
-
-            // Determine final image and tag
-            def finalImage = dockerImage ?: jsonObj.imageName
-            def finalTag = imageTag ?: jsonObj.imageTag
-            println("Final Image: ${finalImage}")
-            println("Final Tag: ${finalTag}")
-
-            // Check if the image exists in Docker Hub
-            def imageExists = imageExist(finalImage, finalTag)
-
+            // Check if image exists
+            def imageExists = imageExist(dockerImage, imageTag)
             def nonProdEnv = ["dev", "preprod", "qa"]
-
             if (environment == "prod") {
                 if (imageExists) {
-                    echo "✅ Image exists. Deploying to PROD..."
+                    echo "✅ Image exists.deploying to ${environment}"
                     sh """
-                        helm install my-release-${environment} myrelease \
-                            --set image.repository=${finalImage} \
-                            --set image.tag=${finalTag}
+                        helm upgrade --install my-release-${environment} myrelease \
+                            --set image.repository=${dockerImage} \
+                            --set image.tag=${imageTag} \
+                            --set namespace=${environment}
+
                     """
                     resourceQuota("my-quota", environment)
-                } else {
-                    error "❌ Image not found in the registry. Deployment to PROD is not allowed!"
                 }
+               else {
+                  error "❌ Image not found in the registry. Deployment to PROD is not allowed!"
+
+               }
             } else if (nonProdEnv.contains(environment)) {
-                if (imageExists) {
-                    echo "✅ Image exists. Deploying to ${environment}..."
-                    sh """
-                        helm upgrade --install my-app-release-${environment} myrelease \
-                            --set image.repository=${finalImage} \
-                            --set image.tag=${finalTag}
-                    """
-                    resourceQuota("my-quota", environment)
-                } else {
-                    echo "🚀 Image not found. Proceeding with a new build or alternative flow..."
-                }
+                if (imageExists){
+                echo "✅ Image exists. Deploying existing image to ${environment}."
+                sh """
+                    helm upgrade --install my-app-release-${environment} myrelease \
+                        --set image.repository=${dockerImage} \
+                        --set image.tag=${imageTag} \
+                        --set namespace=${environment}
+
+
+           """
+           resourceQuota("my-quota", environment)
             } else {
-                error "❌ Invalid environment: ${environment}"
+                echo "🚀 Image not found..."
+
+               }
+
             }
+
         }
     }
 }
-
