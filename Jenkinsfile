@@ -176,9 +176,10 @@ stages {
                 sh "docker rmi -f ${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"                
             }
             emailext (
+                echo "Job success"
                 to: 'mintu2831@gmail.com',
-                subject: "Jenkins Pipeline Failed! 🔥",
-                body: "Job: ${env.JOB_NAME}\nBuild: ${env.BUILD_NUMBER}\nStatus: ❌ Failed"
+                subject: "✅ Build Successful",
+                body: "Job: ${env.JOB_NAME}\nBuild: ${env.BUILD_NUMBER}"
             )
         }
         failure {
