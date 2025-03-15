@@ -62,9 +62,3 @@ def call(String environment, String credentials, String dockerImage, String imag
     }
 }
 
-def imageExist(image, tag) {
-    return script {
-        def statusCode = sh(script: "curl -s -o /dev/null -w \"%{http_code}\" https://hub.docker.com/v2/repositories/${image}/tags/${tag}", returnStdout: true).trim()
-        return statusCode == '200'
-    }
-}
