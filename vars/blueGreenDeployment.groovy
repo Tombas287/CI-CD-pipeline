@@ -11,8 +11,9 @@ def getHelmReleaseVersions(String releaseName, String namespace) {
     try {
         // Fetch Helm history in JSON format
         def historyJson = sh(script: "helm history ${releaseName} -n ${namespace} -o json", returnStdout: true).trim()
+        def getConfig = readFile(historyJson)
         def jsonSlurper = new JsonSlurper()
-        return jsonSlurper.parseText(historyJson)
+        return jsonSlurper.parseText(getConfig)
         // return readJSON(text: historyJson)
     } catch (Exception e) {
         error "Helm release '${releaseName}' not found in namespace '${namespace}'"
