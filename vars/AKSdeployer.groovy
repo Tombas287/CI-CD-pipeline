@@ -11,13 +11,7 @@ def call(String environment, String credentials, String dockerImage , String ima
             helm version
             """
             // Check if image exists
-            def configFile = readFile(pipeline)
-            def jsonslurper = new JsonSlurperClassic()
-            def jsonObj = jsonslurper.parseText(configFile)
-            def finalImage = dockerImage ?: jsonObj.imageName
-            def finalTag = imageTag ?: jsonObj.imageTag
-            def imageExists = imageExist(finalImage, finalTag)
-
+            
 
             def nonProdEnv = ["dev", "preprod", "qa"]
             if (environment == "prod") {
@@ -25,6 +19,13 @@ def call(String environment, String credentials, String dockerImage , String ima
                     echo "✅ Image exists.deploying to ${environment}"
 
                     sh """
+                        def configFile = readFile(pipeline)
+                        def jsonslurper = new JsonSlurperClassic()
+                        def jsonObj = jsonslurper.parseText(configFile)
+                        def finalImage = dockerImage ?: jsonObj.imageName
+                        def finalTag = imageTag ?: jsonObj.imageTag
+                        def imageExists = imageExist(finalImage, finalTag)
+
                         helm install my-release-${environment} myrelease \
                             --set image.repository=${finalImage} \
                             --set image.tag=${finalTag}
