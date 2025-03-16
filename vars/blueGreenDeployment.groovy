@@ -16,7 +16,7 @@ def deploymentScale(String releaseName, String namespace, String pipeline) {
            scaleDownEnabled = false;
         }
         def currentReplicas = sh(script: """
-            kubectl get deployment ${releaseName} -n ${namespace} -o=jsonpath="{.spec.replicas}"
+            kubectl get deployment ${releaseName} -n ${namespace} --request-timeout=5s -o=jsonpath="{.spec.replicas}"  
         """, returnStdout: true).trim().toInteger()
 
         def output = sh(script: """
