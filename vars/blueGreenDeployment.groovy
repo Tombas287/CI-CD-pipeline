@@ -2,53 +2,48 @@ import groovy.json.JsonSlurper
 
 def call(String releaseName, String namespace) {
     deploymentScale(releaseName, namespace)
-    
 }
 
 def deploymentScale(String releaseName, String namespace) {
-    // Read the pipeline.json file content
-    def jsonContent = readFile('pipeline.json').trim()
+    try {
+        def jsonContent = readFile('pipeline.json').trim()
+        def jsonData = new JsonSlurper().parseText(jsonContent)
 
-    // Parse the JSON content
-    def jsonData = new JsonSlurper().parseText(jsonContent)
+        def scaleUpEnabled = jsonData?.scale_up?.enabled ?: false
+        def scaleDownEnabled = jsonData?.scale_down?.enabled ?: false
+        def minReplicas = jsonData?.min_replicas?.toInteger() ?: 1
+        def maxReplicas = jsonData?.scale_up?.max_replicas?.toInteger() ?: 1
 
-    // Extract values with default fallbacks
-    def scaleUpEnabled = jsonData?.scale_up?.enabled ?: false
-    def scaleDownEnabled = jsonData?.scale_down ?: false
-    def minReplicas = jsonData?.min_replicas ?: 1
-    def maxReplicas = jsonData?.scale_up?.max_replicas ?: 1
+        if (scaleUpEnabled && scaleDownEnabled) {
+            error "Invalid choice: Both scale-up and scale-down are enabled simultaneously"
+        }
 
-    // Fetch the current replicas via shell command and convert to integer
-    def currentReplicas = sh(
-            script: """
-                #!/bin/bash
-                kubectl get deployment ${releaseName} -n ${environment} -o json | jq -r .spec.replicas
-            """,
+        def currentReplicas = sh(
+            script: "kubectl get deployment ${releaseName} -n ${namespace} -o json | jq -r .spec.replicas",
             returnStdout: true
-        ).trim()
-    def newReplicas = currentReplicas
+        ).trim().toInteger()
 
-    // Check for invalid configuration (both up and down enabled)
-    if (scaleUpEnabled && scaleDownEnabled) {
-        error "Invalid choice: Both scale-up and scale-down are enabled simultaneously"
-    }
+        def newReplicas = currentReplicas
 
-    // Scale up logic
-    if (scaleUpEnabled && currentReplicas < maxReplicas) {
-        newReplicas = currentReplicas + 1
-        def scaleCommand = "kubectl scale deployment ${releaseName} -n ${namespace}  --replicas=${newReplicas}"
-        echo "Executing: ${scaleCommand}"
-        sh(script: scaleCommand)
-    }
-    // Scale down logic
-    else if (scaleDownEnabled && currentReplicas > minReplicas) {
-        newReplicas = currentReplicas - 1
-        def scaleCommand = "kubectl scale deployment ${releaseName} -n ${namespace}  --replicas=${newReplicas}"
-        echo "Executing: ${scaleCommand}"
-        sh(script: scaleCommand)
-    }
-    // No action needed
-    else {
-        echo "No action required or limit reached or scaling disabled"
+        if (scaleUpEnabled && currentReplicas < maxReplicas) {
+            newReplicas = currentReplicas + 1
+            def scaleCommand = "kubectl scale deployment ${releaseName} -n ${namespace} --replicas=${newReplicas}"
+            echo "Scaling up to ${newReplicas} replicas..."
+            sh(script: scaleCommand)
+        } else if (scaleDownEnabled && currentReplicas > minReplicas) {
+            newReplicas = currentReplicas - 1
+            def scaleCommand = "kubectl scale deployment ${releaseName} -n ${namespace} --replicas=${newReplicas}"
+            echo "Scaling down to ${newReplicas} replicas..."
+            sh(script: scaleCommand)
+        } else {
+            echo "No action required or limit reached or scaling disabled."
+        }
+
+    } catch (FileNotFoundException e) {
+        error "pipeline.json not found: ${e.getMessage()}"
+    } catch (groovy.json.JsonException e) {
+        error "Error parsing pipeline.json: ${e.getMessage()}"
+    } catch (Exception e) {
+        error "An unexpected error occurred: ${e.getMessage()}"
     }
 }
