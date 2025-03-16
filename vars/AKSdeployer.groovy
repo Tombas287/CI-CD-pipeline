@@ -1,4 +1,4 @@
-import groovy.json.JsonSlurper
+import groovy.json.JsonSlurperClassic
 
 def call(String environment, String credentials, String dockerImage, String imageTag, String pipeline) {
     if (!pipeline) {
@@ -115,7 +115,7 @@ def fetchImage(String pipeline) {
 def deploymentScale(String releaseName, String namespace, String pipeline) {
     try {
         def jsonContent = readFile(pipeline).trim()
-        def jsonData = new JsonSlurper().parseText(jsonContent)
+        def jsonData = new JsonSlurperClassic().parseText(jsonContent)
 
         def scaleUpEnabled = jsonData?.scale_up?.enabled ?: false
         def scaleDownEnabled = jsonData?.scale_down?.enabled ?: false
