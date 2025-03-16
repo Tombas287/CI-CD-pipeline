@@ -15,7 +15,7 @@ def deploymentScale(String releaseName, String namespace) {
         def maxReplicas = jsonData?.scale_up?.max_replicas?.toInteger() ?: 1
 
         if (scaleUpEnabled && scaleDownEnabled) {
-            error "Invalid choice: Both scale-up and scale-down are enabled simultaneously"
+           echo "Warning: Both scale-up and scale-down are enabled simultaneously. Scaling will not occur."
         }
 
         def currentReplicas = sh(
