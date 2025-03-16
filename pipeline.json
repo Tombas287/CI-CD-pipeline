@@ -1,11 +1,11 @@
 {   "imageName": "7002370412/myapp",
     "imageTag": "af37813",
     "scale_up": {
-        "enabled": false,
+        "enabled": true,
         "max_replicas": 5
     },
     "scale_down": {
-        "enabled": true,
+        "enabled": false,
         "min_replicas": 1
     }
 }
