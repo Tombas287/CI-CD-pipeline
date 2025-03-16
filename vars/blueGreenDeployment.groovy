@@ -16,18 +16,14 @@ def deploymentScale(String releaseName, String namespace, String pipeline) {
            scaleUpEnabled = false;
            scaleDownEnabled = false;
         }
-        def currentReplicas = sh(script: """
-            kubectl get deployment ${releaseName} -n ${namespace} --request-timeout=5s -o=jsonpath="{.spec.replicas}"  
-        """, returnStdout: true).trim().toInteger()
-
-        def output = sh(script: """
-        kubectl get deployment ${releaseName} -n ${namespace} -o=jsonpath="{.spec.replicas}"
-    """, returnStdout: true).trim()
-        echo "Raw Output from kubectl: '${output}'"
-
-       
+        // def currentReplicas = sh(script: """
+        //     kubectl get deployment ${releaseName} -n ${namespace} --request-timeout=5s -o=jsonpath="{.spec.replicas}"  
+        // """, returnStdout: true).trim().toInteger()
+        def currentReplicas = sh(script: "kubectl get deployment ${releaseName1} -n ${environment} -o=jsonpath='{.spec.replicas}'", 
+                        returnStdout: true).trim()
+                      
         def newReplicas = currentReplicas
-        echo "Current replicaCount: " + newReplicas
+        echo "Current replicaCount is : " + newReplicas
 
         if (scaleUpEnabled && currentReplicas < maxReplicas) {
             newReplicas = currentReplicas + 1
