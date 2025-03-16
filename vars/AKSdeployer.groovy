@@ -56,6 +56,9 @@ def deploy(String environment, String image, String tag) {
     try {
         echo "✅ Image exists. Deploying to ${environment}..."
         sh """
+            export KUBECONFIG=\$KUBECONFIG
+            kubectl config current-context
+            kubectl config get-contexts
             helm upgrade --install my-app-release-${environment} myrelease \
                 --set image.repository=${image} \
                 --set image.tag=${tag} \
