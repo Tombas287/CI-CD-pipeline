@@ -25,9 +25,10 @@ def deploymentScale(String releaseName, String namespace) {
     // ).trim().toInteger()
 
     def currentReplicas = sh(
-    script: "kubectl get deployment ${releaseName} -n ${environment} -o jsonpath=\"{.spec.replicas}\"",
+    script: "kubectl get deployment my-app-release-dev-myrelease -n dev -o jsonpath=\"{.spec.replicas}\"",
     returnStdout: true
-    ).trim().toInteger()
+    ).trim()
+
 
 
     def newReplicas = currentReplicas
