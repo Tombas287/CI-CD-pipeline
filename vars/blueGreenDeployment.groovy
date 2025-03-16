@@ -1,8 +1,28 @@
 import groovy.json.JsonSlurper
 
-def call(String releaseName, String namespace, String pipeline) {
-    deploymentScale(releaseName, namespace, pipeline)
-}
+def call(String environment, String credentials, String pipeline) {
+    if (!pipeline) {
+        error "❌ Missing 'pipeline' argument"
+    }
+
+    withCredentials([file(credentialsId: credentials, variable: 'KUBECONFIG')]) {
+        script {
+            echo "✅ Setting KUBECONFIG..."
+            sh """
+            export KUBECONFIG=\$KUBECONFIG
+            kubectl config current-context
+            kubectl config get-contexts
+            helm version
+            """
+            def releaseName = "my-app-release-${environment}-myrelease"
+            deploymentScale(releaseName, environment , pipeline)
+            }
+
+        }
+    }
+// def call(String releaseName, String namespace, String pipeline) {
+//     deploymentScale(releaseName, namespace, pipeline)
+// }
 
 def deploymentScale(String releaseName, String namespace, String pipeline) {
     try {
