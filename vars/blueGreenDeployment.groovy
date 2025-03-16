@@ -19,8 +19,7 @@ def deploymentScale(String releaseName, String namespace) {
     def maxReplicas = jsonData?.scale_up?.max_replicas ?: 1
 
     // Fetch the current replicas via shell command and convert to integer
-    def currentReplicas = sh(script: "kubectl get deployment ${releaseName} -n ${namespace} -o jsonpath='{.spec.replicas}'", returnStdout: true).trim().toInteger()
-
+    def currentReplicas = sh(script: "kubectl get deployment ${releaseName} -n ${environment} -o json | jq -r '.spec.replicas'", returnStdout: true).trim()
     def newReplicas = currentReplicas
 
     // Check for invalid configuration (both up and down enabled)
