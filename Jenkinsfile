@@ -184,6 +184,8 @@ stages {
             script {
                 sh "docker rmi -f ${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"                
             }
+            cleanWs()
+
             echo "Job success"
             // emailext (
             //     to: 'mintu2831@gmail.com',
