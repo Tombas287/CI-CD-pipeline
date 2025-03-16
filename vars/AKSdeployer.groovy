@@ -30,11 +30,10 @@ def call(String environment, String credentials, String dockerImage, String imag
                     echo "✅ Image exists. Deploying to ${environment}..."
                     deploy(environment, finalImage, finalTag)
                     // resourceQuota("my-quota", environment)
-                    
-                    // blueGreenDeployment("my-app-release-${environment}", environment)
                     def releaseName = "my-app-release-${environment}-myrelease"
+                    blueGreenDeployment.deploymentScale(releaseName, environment, pipeline)                    
                     // // blueGreenDeployment(releaseName, environment, pipeline)
-                    deploymentScale(releaseName, environment, pipeline)
+                    // deploymentScale(releaseName, environment, pipeline)
                 } else {
                     error "❌ Image not found in the registry. Deployment to PROD is not allowed!"
                 }
@@ -43,8 +42,7 @@ def call(String environment, String credentials, String dockerImage, String imag
                     echo "✅ Image exists. Deploying existing image to ${environment}."
                     deploy(environment, finalImage, finalTag)
                     def releaseName = "my-app-release-${environment}-myrelease"
-                    // // blueGreenDeployment(releaseName, environment, pipeline)
-                    deploymentScale(releaseName, environment, pipeline)
+                    blueGreenDeployment.deploymentScale(releaseName, environment, pipeline)  
                     sleep(time: 30, unit: 'SECONDS')                                                       
                 } else {
                     echo "🚀 Image not found. Proceeding with alternative flow..."
