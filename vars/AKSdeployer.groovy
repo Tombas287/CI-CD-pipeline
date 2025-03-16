@@ -86,7 +86,7 @@ def deploy(String environment, String image, String tag) {
 
 def fetchImage(String pipeline) {
     def configFile = readFile(pipeline).trim()
-    def jsonSlurper = new JsonSlurper()
+    def jsonSlurper = new JsonSlurperClassic()
     def jsonObj
 
     try {
