@@ -20,7 +20,7 @@ def deploymentScale(String releaseName, String namespace, String pipeline) {
         """, returnStdout: true).trim().toInteger()
        
         def newReplicas = currentReplicas
-        echo "Current replicaCount" + newReplicas
+        echo "Current replicaCount: " + newReplicas
 
         if (scaleUpEnabled && currentReplicas < maxReplicas) {
             newReplicas = currentReplicas + 1
