@@ -1,25 +1,25 @@
 import groovy.json.JsonSlurperClassic
 
-def call(String environment, String credentials, String pipeline) {
-    if (!pipeline) {
-        error "❌ Missing 'pipeline' argument"
-    }
+// def call(String environment, String credentials, String pipeline) {
+//     if (!pipeline) {
+//         error "❌ Missing 'pipeline' argument"
+//     }
 
-    withCredentials([file(credentialsId: credentials, variable: 'KUBECONFIG')]) {
-        script {
-            echo "✅ Setting KUBECONFIG..."
-            sh """
-            export KUBECONFIG=\$KUBECONFIG
-            kubectl config current-context
-            kubectl config get-contexts
-            helm version
-            """
-            def releaseName = "my-app-release-${environment}-myrelease"
-            deploymentScale(releaseName, environment , pipeline)
-            }
+//     withCredentials([file(credentialsId: credentials, variable: 'KUBECONFIG')]) {
+//         script {
+//             echo "✅ Setting KUBECONFIG..."
+//             sh """
+//             export KUBECONFIG=\$KUBECONFIG
+//             kubectl config current-context
+//             kubectl config get-contexts
+//             helm version
+//             """
+//             def releaseName = "my-app-release-${environment}-myrelease"
+//             deploymentScale(releaseName, environment , pipeline)
+//             }
 
-        }
-    }
+//         }
+//     }
 // def call(String releaseName, String namespace, String pipeline) {
 //     deploymentScale(releaseName, namespace, pipeline)
 // }
@@ -39,24 +39,10 @@ def deploymentScale(String releaseName, String namespace, String pipeline) {
            scaleUpEnabled = false;
            scaleDownEnabled = false;
         }
-
-        // def currentReplicas = sh(
-        //     script: "kubectl get deployment ${releaseName} -n ${namespace} -o json | jq -r .spec.replicas",
-        //     returnStdout: true
-        // ).trim()
-        // def currentReplicas = sh(
-        //     script: "kubectl get deployment ${releaseName} -n ${namespace} -o=jsonpath='{.spec.replicas}'",
-        //     returnStdout: true
-        // ).trim().toInteger()
-        
         def currentReplicas = sh(script: """
             kubectl get deployment ${releaseName} -n ${namespace} -o=jsonpath="{.spec.replicas}"
         """, returnStdout: true).trim().toInteger()
-
-
-
-        // def currentReplicas = 1
-
+       
         def newReplicas = currentReplicas
 
         if (scaleUpEnabled && currentReplicas < maxReplicas) {
