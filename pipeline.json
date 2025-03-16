@@ -5,7 +5,7 @@
         "max_replicas": 5
     },
     "scale_down": {
-        "enabled": true,
+        "enabled": false,
         "min_replicas": 1
     }
 }
