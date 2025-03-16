@@ -5,10 +5,11 @@ def deploymentScale(String releaseName, String namespace, String pipeline) {
         def jsonContent = readFile(pipeline).trim()
         def jsonData = new JsonSlurperClassic().parseText(jsonContent)
 
-        def scaleUpEnabled = jsonData?.scale_up?.enabled ?: false
-        def scaleDownEnabled = jsonData?.scale_down?.enabled ?: false
-        def minReplicas = jsonData.scale_down.min_replicas 
-        def maxReplicas = jsonData.scale_up.max_replicas 
+        def scaleUpEnabled = jsonData.scale_up.enabled ?: false
+        def scaleDownEnabled = jsonData.scale_down.enabled ?: false
+        def minReplicas = jsonData.scale_down.min_replicas ?: 1
+        def maxReplicas = jsonData.scale_up.max_replicas ?: 5  // Default to 1 if not specified
+
 
         if (scaleUpEnabled && scaleDownEnabled) {
            echo "Warning: Both scale-up and scale-down are enabled simultaneously. Scaling will not occur."
