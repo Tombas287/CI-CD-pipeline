@@ -129,10 +129,9 @@ stages {
         stage('Blue green deployment') {
 
         steps {
-            script {
-                def PIPELINE_FILE = "${env.PIPELINE_FILE}"
-                blueGreenDeployment('dev', 'credentials', PIPELINE_FILE)
-            }
+            def PIPELINE_FILE = "${env.PIPELINE_FILE}"
+            blueGreenDeployment('dev', 'credentials', PIPELINE_FILE)
+            
             
         }
 
