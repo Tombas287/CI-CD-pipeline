@@ -126,8 +126,12 @@ def deploymentScale(String releaseName, String namespace, String pipeline) {
             error "❌ Both scale-up and scale-down are enabled. Aborting!"
         }
 
+        // def currentReplicas = sh(
+        //     script: "kubectl get deployment ${releaseName} -n ${namespace} -o jsonpath='{.spec.replicas}'",
+        //     returnStdout: true
+        // ).trim()
         def currentReplicas = sh(
-            script: "kubectl get deployment ${releaseName} -n ${namespace} -o jsonpath='{.spec.replicas}'",
+            script: "kubectl get deployment ${releaseName} -n ${namespace} -o json | jq -r '.spec.replicas'",
             returnStdout: true
         ).trim()
 
