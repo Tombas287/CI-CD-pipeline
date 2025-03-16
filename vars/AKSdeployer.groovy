@@ -14,8 +14,8 @@ def call(String environment, String credentials, String dockerImage, String imag
             kubectl config get-contexts
             helm version
             """
-            def releaseName = "my-app-release-${environment}-myrelease"
-            def sample = sh "kubectl get deployment ${releaseName} -n ${environment} -o=jsonpath='{.spec.replicas}'"
+            def releaseName1 = "my-app-release-${environment}-myrelease"
+            def sample = sh "kubectl get deployment ${releaseName1} -n ${environment} -o=jsonpath='{.spec.replicas}'"
             echo "sample: ${sample}"
 
 
