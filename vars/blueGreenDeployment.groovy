@@ -1,12 +1,12 @@
 import groovy.json.JsonSlurper
 
-def call(String releaseName, String namespace) {
-    deploymentScale(releaseName, namespace)
+def call(String releaseName, String namespace, String pipeline) {
+    deploymentScale(releaseName, namespace, pipeline)
 }
 
-def deploymentScale(String releaseName, String namespace) {
+def deploymentScale(String releaseName, String namespace, String pipeline) {
     try {
-        def jsonContent = readFile('pipeline.json').trim()
+        def jsonContent = readFile(pipeline).trim()
         def jsonData = new JsonSlurper().parseText(jsonContent)
 
         def scaleUpEnabled = jsonData?.scale_up?.enabled ?: false
