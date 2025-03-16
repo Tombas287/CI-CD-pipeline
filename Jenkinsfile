@@ -150,9 +150,10 @@ stages {
             steps {
                 script {
 
-                    def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
-                    def imageTag = "bfca98a"
-                    AKSdeployer('preprod', 'credentials',dockerImage, imageTag )
+                    def dockerImage = ""
+                    def imageTag = ""
+                    def PIPELINE_FILE = "${env.PIPELINE_FILE}"
+                    AKSdeployer('preprod', 'credentials',dockerImage, imageTag,PIPELINE_FILE)
                 }
             }
         }
