@@ -36,7 +36,8 @@ def call(String environment, String credentials, String dockerImage, String imag
                     
                     // resourceQuota("my-quota", environment)
                     def releaseName = "my-app-release-${environment}-myrelease"
-                    blueGreenDeployment.deploymentScale(releaseName, environment, pipeline)                    
+                    blueGreenDeployment.deploymentScale(releaseName, environment, pipeline, credentials)   
+                    // deploymentScale(String releaseName, String namespace, String pipeline, String credentialsId)
                     // // blueGreenDeployment(releaseName, environment, pipeline)
                     // deploymentScale(releaseName, environment, pipeline)
                 } else {
@@ -47,7 +48,8 @@ def call(String environment, String credentials, String dockerImage, String imag
                     echo "✅ Image exists. Deploying existing image to ${environment}."
                     deploy(environment, finalImage, finalTag)
                     def releaseName = "my-app-release-${environment}-myrelease"
-                    blueGreenDeployment.deploymentScale(releaseName, environment, pipeline)  
+                    // blueGreenDeployment.deploymentScale(releaseName, environment, pipeline)  
+                    blueGreenDeployment.deploymentScale(releaseName, environment, pipeline, credentials)   
                     sleep(time: 30, unit: 'SECONDS')                                                       
                 } else {
                     echo "🚀 Image not found. Proceeding with alternative flow..."
