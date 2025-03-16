@@ -131,7 +131,7 @@ stages {
         steps {
             def PIPELINE_FILE = "${env.PIPELINE_FILE}"
             blueGreenDeployment('dev', 'credentials', PIPELINE_FILE)
-            
+          }           
             
         }
 
