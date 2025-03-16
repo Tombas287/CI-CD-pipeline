@@ -17,7 +17,7 @@ def deploymentScale(String releaseName, String namespace, String pipeline) {
         }
         def currentReplicas = sh(script: """
             kubectl get deployment ${releaseName} -n ${namespace} -o=jsonpath="{.spec.replicas}"
-        """, returnStdout: true).trim().toInteger()
+        """, returnStdout: true).trim()
        
         def newReplicas = currentReplicas
         echo "Current replicaCount: " + newReplicas
