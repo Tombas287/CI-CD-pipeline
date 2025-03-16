@@ -16,6 +16,8 @@ def deploymentScale(String releaseName, String namespace) {
 
         if (scaleUpEnabled && scaleDownEnabled) {
            echo "Warning: Both scale-up and scale-down are enabled simultaneously. Scaling will not occur."
+           scaleUpEnabled = false;
+           scaleDownEnabled = false;
         }
 
         def currentReplicas = sh(
