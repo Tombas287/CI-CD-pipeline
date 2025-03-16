@@ -28,7 +28,7 @@ def call(String environment, String credentials, String dockerImage, String imag
             if (environment == "prod") {
                 if (imageExists) {
                     echo "✅ Image exists. Deploying to ${environment}..."
-                    deploy(environment, finalImage, finalTag)
+                    deploy(environment, finalImage, finalTag, pipeline)
                     resourceQuota("my-quota", environment)
                     // blueGreenDeployment("my-app-release-${environment}", environment)
                 } else {
@@ -37,7 +37,7 @@ def call(String environment, String credentials, String dockerImage, String imag
             } else if (nonProdEnv.contains(environment)) {
                 if (imageExists) {
                     echo "✅ Image exists. Deploying existing image to ${environment}."
-                    deploy(environment, finalImage, finalTag)
+                    deploy(environment, finalImage, finalTag, pipeline)
                     sleep(time: 30, unit: 'SECONDS')                                                       
                 } else {
                     echo "🚀 Image not found. Proceeding with alternative flow..."
@@ -52,7 +52,7 @@ def call(String environment, String credentials, String dockerImage, String imag
     }
 }
 
-def deploy(String environment, String image, String tag) {
+def deploy(String environment, String image, String tag, String pipeline) {
     try {
         echo "✅ Image exists. Deploying to ${environment}..."
         sh """
@@ -68,7 +68,7 @@ def deploy(String environment, String image, String tag) {
         resourceQuota("my-quota", environment)
         def releaseName = "my-app-release-${environment}-myrelease"
         // sh "kubectl  get pod  -n dev"
-        blueGreenDeployment(releaseName, environment)
+        blueGreenDeployment(releaseName, environment, pipeline)
         // blueGreenDeployment("my-app-release-${environment}", environment)
     } catch (Exception e) {
         echo "❌ Deployment failed for ${environment}. Rolling back..."
