@@ -1,29 +1,5 @@
 import groovy.json.JsonSlurperClassic
 
-// def call(String environment, String credentials, String pipeline) {
-//     if (!pipeline) {
-//         error "❌ Missing 'pipeline' argument"
-//     }
-
-//     withCredentials([file(credentialsId: credentials, variable: 'KUBECONFIG')]) {
-//         script {
-//             echo "✅ Setting KUBECONFIG..."
-//             sh """
-//             export KUBECONFIG=\$KUBECONFIG
-//             kubectl config current-context
-//             kubectl config get-contexts
-//             helm version
-//             """
-//             def releaseName = "my-app-release-${environment}-myrelease"
-//             deploymentScale(releaseName, environment , pipeline)
-//             }
-
-//         }
-//     }
-// def call(String releaseName, String namespace, String pipeline) {
-//     deploymentScale(releaseName, namespace, pipeline)
-// }
-
 def deploymentScale(String releaseName, String namespace, String pipeline) {
     try {
         def jsonContent = readFile(pipeline).trim()
@@ -44,6 +20,7 @@ def deploymentScale(String releaseName, String namespace, String pipeline) {
         """, returnStdout: true).trim().toInteger()
        
         def newReplicas = currentReplicas
+        echo "Current replicaCount" + newReplicas
 
         if (scaleUpEnabled && currentReplicas < maxReplicas) {
             newReplicas = currentReplicas + 1
