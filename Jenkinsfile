@@ -182,13 +182,13 @@ stages {
             //     body: "Job: ${env.JOB_NAME}\nBuild: ${env.BUILD_NUMBER}"
             // )
         }
-        failure {
-            // echo "Build failed"
-            // emailext (
-            //     to: 'mintu2831@gmail.com',
-            //     subject: "Jenkins Pipeline Failed! 🔥",
-            //     body: "Job: ${env.JOB_NAME}\nBuild: ${env.BUILD_NUMBER}\nStatus: ❌ Failed"
-            // )
-        }
-    }
+//         failure {
+//              echo "Build failed"
+//             // emailext (
+//             //     to: 'mintu2831@gmail.com',
+//             //     subject: "Jenkins Pipeline Failed! 🔥",
+//             //     body: "Job: ${env.JOB_NAME}\nBuild: ${env.BUILD_NUMBER}\nStatus: ❌ Failed"
+//             // )
+//         }
+//     }
 }
