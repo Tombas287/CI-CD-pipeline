@@ -9,8 +9,6 @@ def call(String environment, String credentials, String dockerImage, String imag
         script {
             echo "✅ Setting KUBECONFIG..."
             sh """
-            sh "rm -rf $HOME/.kube/cache"
-            sh "rm -rf $HOME/.kube/http-cache"
             export KUBECONFIG=\$KUBECONFIG
             kubectl config current-context
             kubectl config get-contexts
