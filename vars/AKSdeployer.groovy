@@ -31,7 +31,8 @@ def call(String environment, String credentials, String dockerImage, String imag
                     deploy(environment, finalImage, finalTag)
                     // resourceQuota("my-quota", environment)
                     def releaseName = "my-app-release-${environment}-myrelease"
-                    blueGreenDeployment(releaseName, environment, pipeline)
+                    // blueGreenDeployment(releaseName, environment, pipeline)
+                    deploymentScale(releaseName, environment, pipeline)
                     // blueGreenDeployment("my-app-release-${environment}", environment)
                 } else {
                     error "❌ Image not found in the registry. Deployment to PROD is not allowed!"
@@ -41,7 +42,8 @@ def call(String environment, String credentials, String dockerImage, String imag
                     echo "✅ Image exists. Deploying existing image to ${environment}."
                     deploy(environment, finalImage, finalTag)
                     def releaseName = "my-app-release-${environment}-myrelease"
-                    blueGreenDeployment(releaseName, environment, pipeline)
+                    // blueGreenDeployment(releaseName, environment, pipeline)
+                    deploymentScale(releaseName, environment, pipeline)
                     sleep(time: 30, unit: 'SECONDS')                                                       
                 } else {
                     echo "🚀 Image not found. Proceeding with alternative flow..."
@@ -101,5 +103,59 @@ def fetchImage(String pipeline) {
     } else {
         echo "⚠️ Missing 'imageName' or 'imageTag' in the JSON file."
         return [:]
+    }
+}
+
+// import groovy.json.JsonSlurper
+
+// def call(String releaseName, String namespace, String pipeline) {
+//     deploymentScale(releaseName, namespace, pipeline)
+// }
+
+def deploymentScale(String releaseName, String namespace, String pipeline) {
+    try {
+        def jsonContent = readFile(pipeline).trim()
+        def jsonData = new JsonSlurper().parseText(jsonContent)
+
+        def scaleUpEnabled = jsonData?.scale_up?.enabled ?: false
+        def scaleDownEnabled = jsonData?.scale_down?.enabled ?: false
+        def minReplicas = jsonData?.min_replicas?.toInteger() ?: 1
+        def maxReplicas = jsonData?.scale_up?.max_replicas?.toInteger() ?: 1
+
+        if (scaleUpEnabled && scaleDownEnabled) {
+           echo "Warning: Both scale-up and scale-down are enabled simultaneously. Scaling will not occur."
+           scaleUpEnabled = false;
+           scaleDownEnabled = false;
+        }
+
+        // def currentReplicas = sh(
+        //     script: "kubectl get deployment ${releaseName} -n ${namespace} -o json | jq -r .spec.replicas",
+        //     returnStdout: true
+        // ).trim().toInteger()
+
+        def currentReplicas = 1
+
+        def newReplicas = currentReplicas
+
+        if (scaleUpEnabled && currentReplicas < maxReplicas) {
+            newReplicas = currentReplicas + 1
+            def scaleCommand = "kubectl scale deployment ${releaseName} -n ${namespace} --replicas=${newReplicas}"
+            echo "Scaling up to ${newReplicas} replicas..."
+            sh(script: scaleCommand)
+        } else if (scaleDownEnabled && currentReplicas > minReplicas) {
+            newReplicas = currentReplicas - 1
+            def scaleCommand = "kubectl scale deployment ${releaseName} -n ${namespace} --replicas=${newReplicas}"
+            echo "Scaling down to ${newReplicas} replicas..."
+            sh(script: scaleCommand)
+        } else {
+            echo "No action required or limit reached or scaling disabled."
+        }
+
+    } catch (FileNotFoundException e) {
+        error "pipeline.json not found: ${e.getMessage()}"
+    } catch (groovy.json.JsonException e) {
+        error "Error parsing pipeline.json: ${e.getMessage()}"
+    } catch (Exception e) {
+        error "An unexpected error occurred: ${e.getMessage()}"
     }
 }
