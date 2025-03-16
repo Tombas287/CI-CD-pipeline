@@ -13,12 +13,12 @@ def call(String environment, String credentials, String dockerImage, String imag
             kubectl config current-context
             kubectl config get-contexts
             helm version
-            """
+            """            
             def releaseName1 = "my-app-release-${environment}-myrelease"
-            def sample = sh "kubectl get deployment ${releaseName1} -n ${environment} -o=jsonpath='{.spec.replicas}'"
+            def sample = sh(script: "kubectl get deployment ${releaseName1} -n ${environment} -o=jsonpath='{.spec.replicas}'", 
+                        returnStdout: true).trim()
+        
             echo "sample: ${sample}"
-
-
             // Fetch image details from the JSON pipeline file
             def fetchedImage = fetchImage(pipeline)
             def finalImage = dockerImage ?: fetchedImage.finalImage
@@ -33,6 +33,7 @@ def call(String environment, String credentials, String dockerImage, String imag
                 if (imageExists) {
                     echo "✅ Image exists. Deploying to ${environment}..."
                     deploy(environment, finalImage, finalTag)
+                    
                     // resourceQuota("my-quota", environment)
                     def releaseName = "my-app-release-${environment}-myrelease"
                     blueGreenDeployment.deploymentScale(releaseName, environment, pipeline)                    
