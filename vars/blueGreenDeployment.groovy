@@ -7,8 +7,8 @@ def deploymentScale(String releaseName, String namespace, String pipeline) {
 
         def scaleUpEnabled = jsonData?.scale_up?.enabled ?: false
         def scaleDownEnabled = jsonData?.scale_down?.enabled ?: false
-        def minReplicas = jsonData?.min_replicas?.toInteger() ?: 1
-        def maxReplicas = jsonData?.scale_up?.max_replicas?.toInteger() ?: 1
+        def minReplicas = jsonData.scale_down.min_replicas ?: 1
+        def maxReplicas = jsonData.scale_up.max_replicas ?: 1
 
         if (scaleUpEnabled && scaleDownEnabled) {
            echo "Warning: Both scale-up and scale-down are enabled simultaneously. Scaling will not occur."
