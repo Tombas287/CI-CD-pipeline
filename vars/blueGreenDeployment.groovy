@@ -25,7 +25,7 @@ def deploymentScale(String releaseName, String namespace, String pipeline) {
         //     returnStdout: true
         // ).trim().toInteger()
 
-        def currentReplicas = 2
+        def currentReplicas = 1
 
         def newReplicas = currentReplicas
 
