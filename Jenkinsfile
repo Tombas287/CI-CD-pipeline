@@ -115,25 +115,25 @@ stages {
         //         }
         //     }
         // }
-        // stage('Aks deployer Dev') {
-        //     steps {
-        //         script {
+        stage('Aks deployer Dev') {
+            steps {
+                script {
 
-        //             def dockerImage = ""
-        //             def imageTag = ""
-        //             def PIPELINE_FILE = "${env.PIPELINE_FILE}"
-        //             AKSdeployer('dev', 'credentials',dockerImage, imageTag, PIPELINE_FILE)
-        //         }
-        //     }
-        // }
-        stage('Blue green deployment') {
-
-        steps {
-            
-            blueGreenDeployment('dev', 'credentials', "${env.PIPELINE_FILE}")
-          }           
-            
+                    def dockerImage = ""
+                    def imageTag = ""
+                    def PIPELINE_FILE = "${env.PIPELINE_FILE}"
+                    AKSdeployer('dev', 'credentials',dockerImage, imageTag, PIPELINE_FILE)
+                }
+            }
         }
+        // stage('Blue green deployment') {
+
+        // steps {
+            
+        //     blueGreenDeployment('dev', 'credentials', "${env.PIPELINE_FILE}")
+        //   }           
+            
+        // }
 
         // stage('Aks deployer qa') {
         //     steps {
