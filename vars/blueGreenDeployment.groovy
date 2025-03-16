@@ -19,7 +19,7 @@ def deploymentScale(String releaseName, String namespace, String pipeline) {
         // def currentReplicas = sh(script: """
         //     kubectl get deployment ${releaseName} -n ${namespace} --request-timeout=5s -o=jsonpath="{.spec.replicas}"  
         // """, returnStdout: true).trim().toInteger()
-        def currentReplicas = sh(script: "kubectl get deployment ${releaseName1} -n ${environment} -o=jsonpath='{.spec.replicas}'", 
+        def currentReplicas = sh(script: "kubectl get deployment ${releaseName} -n ${environment} -o=jsonpath='{.spec.replicas}'", 
                         returnStdout: true).trim()
                       
         def newReplicas = currentReplicas
