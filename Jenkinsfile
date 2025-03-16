@@ -135,47 +135,47 @@ stages {
             
         // }
 
-        // stage('Aks deployer qa') {
-        //     steps {
-        //         script {
+        stage('Aks deployer qa') {
+            steps {
+                script {
 
-        //             def dockerImage = ""
-        //             def imageTag = ""
-        //             def PIPELINE_FILE = "${env.PIPELINE_FILE}"
-        //             AKSdeployer('qa', 'credentials',dockerImage, imageTag,PIPELINE_FILE)
-        //         }
-        //     }
-        // }
-        // stage('Aks deployer preprod') {
-        //     steps {
-        //         script {
+                    def dockerImage = ""
+                    def imageTag = ""
+                    def PIPELINE_FILE = "${env.PIPELINE_FILE}"
+                    AKSdeployer('qa', 'credentials',dockerImage, imageTag,PIPELINE_FILE)
+                }
+            }
+        }
+        stage('Aks deployer preprod') {
+            steps {
+                script {
 
-        //             def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
-        //             def imageTag = "bfca98a"
-        //             AKSdeployer('preprod', 'credentials',dockerImage, imageTag )
-        //         }
-        //     }
-        // }
-        // stage('Aks deployer prod') {
-        //     steps {
-        //         script {
-        //                def userInput = input(
-        //                message: 'proceed with prod deployment?',
-        //                parameters : [booleanParam(name: 'Confirm', defaultValue: false, description: 'Yes proceed')]
-        //                )
+                    def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
+                    def imageTag = "bfca98a"
+                    AKSdeployer('preprod', 'credentials',dockerImage, imageTag )
+                }
+            }
+        }
+        stage('Aks deployer prod') {
+            steps {
+                script {
+                       def userInput = input(
+                       message: 'proceed with prod deployment?',
+                       parameters : [booleanParam(name: 'Confirm', defaultValue: false, description: 'Yes proceed')]
+                       )
 
-        //                if (userInput) {
-        //                        def dockerImage = ""
-        //                        def imageTag = ""
-        //                        def PIPELINE_FILE = "${env.PIPELINE_FILE}"
-        //                        AKSdeployer('prod', 'credentials',dockerImage, imageTag, PIPELINE_FILE)
-        //                }
-        //                else {
-        //                   error("Deployment aborted by user.")
-        //                }
-        //        }
-        //    }
-        // }
+                       if (userInput) {
+                               def dockerImage = ""
+                               def imageTag = ""
+                               def PIPELINE_FILE = "${env.PIPELINE_FILE}"
+                               AKSdeployer('prod', 'credentials',dockerImage, imageTag, PIPELINE_FILE)
+                       }
+                       else {
+                          error("Deployment aborted by user.")
+                       }
+               }
+           }
+        }
 
     }
 
