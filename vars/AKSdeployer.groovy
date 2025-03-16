@@ -67,7 +67,8 @@ def deploy(String environment, String image, String tag) {
         """
         resourceQuota("my-quota", environment)
         def releaseName = "my-app-release-${environment}-myrelease"
-        blueGreenDeployment(releaseName, environment)
+        sh "kubectl  get pod  -n dev"
+        // blueGreenDeployment(releaseName, environment)
         // blueGreenDeployment("my-app-release-${environment}", environment)
     } catch (Exception e) {
         echo "❌ Deployment failed for ${environment}. Rolling back..."
