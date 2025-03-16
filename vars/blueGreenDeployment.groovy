@@ -53,12 +53,13 @@ def deploymentScale(String releaseName, String namespace, String pipeline) {
             newReplicas = currentReplicas + 1
             def scaleCommand = "kubectl scale deployment ${releaseName} -n ${namespace} --replicas=${newReplicas}"
             echo "Scaling up to ${newReplicas} replicas..."
-            sh(script: scaleCommand)
+            
+            sh(script: scaleCommand, returnStatus: true)
         } else if (scaleDownEnabled && currentReplicas > minReplicas) {
             newReplicas = currentReplicas - 1
             def scaleCommand = "kubectl scale deployment ${releaseName} -n ${namespace} --replicas=${newReplicas}"
             echo "Scaling down to ${newReplicas} replicas..."
-            sh(script: scaleCommand)
+            sh(script: scaleCommand, returnStatus: true)
         } else {
             echo "No action required or limit reached or scaling disabled."
         }
