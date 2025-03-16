@@ -126,17 +126,17 @@ stages {
                 }
             }
         }
-        stage('Aks deployer qa') {
-            steps {
-                script {
+        // stage('Aks deployer qa') {
+        //     steps {
+        //         script {
 
-                    def dockerImage = ""
-                    def imageTag = ""
-                    def PIPELINE_FILE = "${env.PIPELINE_FILE}"
-                    AKSdeployer('qa', 'credentials',dockerImage, imageTag,PIPELINE_FILE)
-                }
-            }
-        }
+        //             def dockerImage = ""
+        //             def imageTag = ""
+        //             def PIPELINE_FILE = "${env.PIPELINE_FILE}"
+        //             AKSdeployer('qa', 'credentials',dockerImage, imageTag,PIPELINE_FILE)
+        //         }
+        //     }
+        // }
         // stage('Aks deployer preprod') {
         //     steps {
         //         script {
@@ -147,26 +147,26 @@ stages {
         //         }
         //     }
         // }
-        stage('Aks deployer prod') {
-            steps {
-                script {
-                       def userInput = input(
-                       message: 'proceed with prod deployment?',
-                       parameters : [booleanParam(name: 'Confirm', defaultValue: false, description: 'Yes proceed')]
-                       )
+        // stage('Aks deployer prod') {
+        //     steps {
+        //         script {
+        //                def userInput = input(
+        //                message: 'proceed with prod deployment?',
+        //                parameters : [booleanParam(name: 'Confirm', defaultValue: false, description: 'Yes proceed')]
+        //                )
 
-                       if (userInput) {
-                               def dockerImage = ""
-                               def imageTag = ""
-                               def PIPELINE_FILE = "${env.PIPELINE_FILE}"
-                               AKSdeployer('prod', 'credentials',dockerImage, imageTag, PIPELINE_FILE)
-                       }
-                       else {
-                          error("Deployment aborted by user.")
-                       }
-               }
-           }
-        }
+        //                if (userInput) {
+        //                        def dockerImage = ""
+        //                        def imageTag = ""
+        //                        def PIPELINE_FILE = "${env.PIPELINE_FILE}"
+        //                        AKSdeployer('prod', 'credentials',dockerImage, imageTag, PIPELINE_FILE)
+        //                }
+        //                else {
+        //                   error("Deployment aborted by user.")
+        //                }
+        //        }
+        //    }
+        // }
 
     }
 
@@ -176,19 +176,19 @@ stages {
                 sh "docker rmi -f ${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"                
             }
             echo "Job success"
-            emailext (
-                to: 'mintu2831@gmail.com',
-                subject: "✅ Build Successful",
-                body: "Job: ${env.JOB_NAME}\nBuild: ${env.BUILD_NUMBER}"
-            )
+            // emailext (
+            //     to: 'mintu2831@gmail.com',
+            //     subject: "✅ Build Successful",
+            //     body: "Job: ${env.JOB_NAME}\nBuild: ${env.BUILD_NUMBER}"
+            // )
         }
         failure {
-            echo "Build failed"
-            emailext (
-                to: 'mintu2831@gmail.com',
-                subject: "Jenkins Pipeline Failed! 🔥",
-                body: "Job: ${env.JOB_NAME}\nBuild: ${env.BUILD_NUMBER}\nStatus: ❌ Failed"
-            )
+            // echo "Build failed"
+            // emailext (
+            //     to: 'mintu2831@gmail.com',
+            //     subject: "Jenkins Pipeline Failed! 🔥",
+            //     body: "Job: ${env.JOB_NAME}\nBuild: ${env.BUILD_NUMBER}\nStatus: ❌ Failed"
+            // )
         }
     }
 }
