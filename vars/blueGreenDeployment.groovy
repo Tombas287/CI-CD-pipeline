@@ -40,10 +40,15 @@ def deploymentScale(String releaseName, String namespace, String pipeline) {
            scaleDownEnabled = false;
         }
 
+        // def currentReplicas = sh(
+        //     script: "kubectl get deployment ${releaseName} -n ${namespace} -o json | jq -r .spec.replicas",
+        //     returnStdout: true
+        // ).trim()
         def currentReplicas = sh(
-            script: "kubectl get deployment ${releaseName} -n ${namespace} -o json | jq -r .spec.replicas",
+            script: "kubectl get deployment ${releaseName} -n ${namespace} -o=jsonpath='{.spec.replicas}'",
             returnStdout: true
-        ).trim()
+        ).trim().toInteger()
+
 
         // def currentReplicas = 1
 
