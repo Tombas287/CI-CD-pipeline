@@ -46,7 +46,7 @@ def call(String environment, String credentials, String dockerImage, String imag
                 error "❌ Invalid environment: ${environment}"
             }
             // Trigger rollback if enabled
-            
+                        
         
         }
     }
@@ -63,6 +63,8 @@ def deploy(String environment, String image, String tag) {
                 --namespace=${environment}
         """
         resourceQuota("my-quota", environment)
+        def releaseName = 'my-app-release-${environment}-myrelease'
+        blueGreenDeployment(releaseName )
         // blueGreenDeployment("my-app-release-${environment}", environment)
     } catch (Exception e) {
         echo "❌ Deployment failed for ${environment}. Rolling back..."
