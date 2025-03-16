@@ -119,43 +119,37 @@ def deploymentScale(String releaseName, String namespace, String pipeline) {
 
         def scaleUpEnabled = jsonData?.scale_up?.enabled ?: false
         def scaleDownEnabled = jsonData?.scale_down?.enabled ?: false
-        def minReplicas = jsonData?.min_replicas?.toInteger() ?: 1
-        def maxReplicas = jsonData?.scale_up?.max_replicas?.toInteger() ?: 1
+        def minReplicas = jsonData?.min_replicas ?: 1
+        def maxReplicas = jsonData?.scale_up?.max_replicas ?: 3
 
         if (scaleUpEnabled && scaleDownEnabled) {
-           echo "Warning: Both scale-up and scale-down are enabled simultaneously. Scaling will not occur."
-           scaleUpEnabled = false;
-           scaleDownEnabled = false;
+            error "❌ Both scale-up and scale-down are enabled. Aborting!"
         }
 
-        // def currentReplicas = sh(
-        //     script: "kubectl get deployment ${releaseName} -n ${namespace} -o json | jq -r .spec.replicas",
-        //     returnStdout: true
-        // ).trim().toInteger()
+        def currentReplicas = sh(
+            script: "kubectl get deployment ${releaseName} -n ${namespace} -o jsonpath='{.spec.replicas}'",
+            returnStdout: true
+        ).trim()
 
-        def currentReplicas = 1
+        echo "Current Replicas: ${currentReplicas}"
 
+        currentReplicas = currentReplicas.toInteger()
         def newReplicas = currentReplicas
 
         if (scaleUpEnabled && currentReplicas < maxReplicas) {
             newReplicas = currentReplicas + 1
-            def scaleCommand = "kubectl scale deployment ${releaseName} -n ${namespace} --replicas=${newReplicas}"
             echo "Scaling up to ${newReplicas} replicas..."
-            sh(script: scaleCommand)
         } else if (scaleDownEnabled && currentReplicas > minReplicas) {
             newReplicas = currentReplicas - 1
-            def scaleCommand = "kubectl scale deployment ${releaseName} -n ${namespace} --replicas=${newReplicas}"
             echo "Scaling down to ${newReplicas} replicas..."
-            sh(script: scaleCommand)
         } else {
-            echo "No action required or limit reached or scaling disabled."
+            echo "No scaling action needed."
+            return
         }
 
-    } catch (FileNotFoundException e) {
-        error "pipeline.json not found: ${e.getMessage()}"
-    } catch (groovy.json.JsonException e) {
-        error "Error parsing pipeline.json: ${e.getMessage()}"
+        sh "kubectl scale deployment ${releaseName} -n ${namespace} --replicas=${newReplicas}"
+
     } catch (Exception e) {
-        error "An unexpected error occurred: ${e.getMessage()}"
+        error "❌ Error in scaling: ${e.getMessage()}"
     }
 }
