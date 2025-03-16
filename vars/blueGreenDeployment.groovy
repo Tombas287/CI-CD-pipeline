@@ -1,11 +1,11 @@
 import groovy.json.JsonSlurper
 
-def call(String releaseName) {
-    deploymentScale(releaseName)
+def call(String releaseName, String namespace) {
+    deploymentScale(releaseName, namespace)
     
 }
 
-def deploymentScale(String releaseName) {
+def deploymentScale(String releaseName, String namespace) {
     // Read the pipeline.json file content
     def jsonContent = readFile('pipeline.json').trim()
 
@@ -20,7 +20,7 @@ def deploymentScale(String releaseName) {
 
     // Fetch the current replicas via shell command and convert to integer
     def currentReplicas = sh(
-        script: "kubectl get deployment ${releaseName} -o jsonpath='{.spec.replicas}' | tr -d \"'\"",
+        script: "kubectl get deployment ${releaseName} -n ${namespace} -o jsonpath='{.spec.replicas}' | tr -d \"'\"",
         returnStdout: true
     ).trim().toInteger()
 
@@ -34,14 +34,14 @@ def deploymentScale(String releaseName) {
     // Scale up logic
     if (scaleUpEnabled && currentReplicas < maxReplicas) {
         newReplicas = currentReplicas + 1
-        def scaleCommand = "kubectl scale deployment ${releaseName} --replicas=${newReplicas}"
+        def scaleCommand = "kubectl scale deployment ${releaseName} -n ${namespace}  --replicas=${newReplicas}"
         echo "Executing: ${scaleCommand}"
         sh(script: scaleCommand)
     }
     // Scale down logic
     else if (scaleDownEnabled && currentReplicas > minReplicas) {
         newReplicas = currentReplicas - 1
-        def scaleCommand = "kubectl scale deployment ${releaseName} --replicas=${newReplicas}"
+        def scaleCommand = "kubectl scale deployment ${releaseName} -n ${namespace}  --replicas=${newReplicas}"
         echo "Executing: ${scaleCommand}"
         sh(script: scaleCommand)
     }
