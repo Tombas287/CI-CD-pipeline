@@ -143,7 +143,7 @@ def deploymentScale(String releaseName, String namespace, String pipeline, Strin
         
         def currentReplicas = withEnv(["KUBECONFIG=${kubeconfigPath}"]) {
             sh(
-                script: "kubectl get deployment ${releaseName} -n ${namespace} -o json | jq -r '.spec.replicas'",
+                script: "kubectl get deployment ${releaseName} -n ${namespace} -o=jsonpath='{.spec.replicas}'",
                 returnStdout: true
             ).trim()
         }
