@@ -42,17 +42,17 @@ stages {
         //         }
        //      }
       //   }
-         // stage('Pip Builder'){
-         //     steps {
-         //         script {
-         //            pipBuilder( pythonVersion: 'python3',
-         //            requirementsFile: 'requirements.txt',
-         //             outputDir: 'build_output/',
-         //             venvDir: 'venv'
-         //            )
-         //        }
-         //    }
-         // }
+         stage('Pip Builder'){
+             steps {
+                 script {
+                    pipBuilder( pythonVersion: 'python3',
+                    requirementsFile: 'requirements.txt',
+                     outputDir: 'build_output/',
+                     venvDir: 'venv'
+                    )
+                }
+            }
+         }
 
         stage('SonarQube Analysis') {
             steps {
