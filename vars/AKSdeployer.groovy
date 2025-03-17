@@ -141,12 +141,13 @@ def deploymentScale(String releaseName, String namespace, String pipeline, Strin
         //     returnStdout: true
         // ).trim()
         
-        def currentReplicas = sh(
-            script: """
-            export KUBECONFIG=${kubeconfigPath}
-            kubectl get deployment ${releaseName} -n ${namespace} -o json | jq -r '.spec.replicas',            
-            """,
-            returnStdout: true).trim()
+        def currentReplicas = withEnv(["KUBECONFIG=${kubeconfigPath}"]) {
+            sh(
+                script: "kubectl get deployment ${releaseName} -n ${namespace} -o json | jq -r '.spec.replicas'",
+                returnStdout: true
+            ).trim()
+        }
+
         echo "Current Replicas: ${currentReplicas}"
 
         currentReplicas = currentReplicas.toInteger()
