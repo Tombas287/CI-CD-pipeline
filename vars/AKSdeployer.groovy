@@ -80,7 +80,7 @@ def deploy(String environment, String image, String tag) {
                 --set namespace=${environment} \
                 --namespace=${environment}
         """
-        resourceQuota("my-quota", environment)
+        // resourceQuota("my-quota", environment)
         // def releaseName = "my-app-release-${environment}-myrelease"
                     // blueGreenDeployment(releaseName, environment, pipeline)
                 
