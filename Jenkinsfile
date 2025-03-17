@@ -16,8 +16,8 @@ pipeline {
         USERNAME = "7002370412"
         ENVIRONMENT = 'dev'   
         PIPELINE_FILE = "${env.WORKSPACE}/pipeline.json"
-        // GIT_COMMIT_SHA = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-        GIT_COMMIT_SHA = "af37813"
+        GIT_COMMIT_SHA = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+        // GIT_COMMIT_SHA = "af37813"
 
     }
 stages {
@@ -88,39 +88,39 @@ stages {
 
         //     }
 
-        // stage('Build and Tag Docker Image') {
-        //     when { expression { currentBuild.result == null } }
-        //      steps {
-        //          script {
-        //              def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
-        //              buildAndTagImage(dockerTag)
-        //          }
-        //      }
-        //  }
+        stage('Build and Tag Docker Image') {
+            when { expression { currentBuild.result == null } }
+             steps {
+                 script {
+                     def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
+                     buildAndTagImage(dockerTag)
+                 }
+             }
+         }
 
-         // stage('Image scan'){
-         //     steps {
-         //    script {
-         //        def imageTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
-         //         imageScan(imageTag)
-         //     }
-         //   }
-         // }
-        // stage('Docker push to registry'){
-        //     when { expression { currentBuild.result == null } }
-        //     steps {
-        //         script {
-        //             def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
-        //             dockerPush(dockerTag)
-        //         }
-        //     }
-        // }
+         stage('Image scan'){
+             steps {
+            script {
+                def imageTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
+                 imageScan(imageTag)
+             }
+           }
+         }
+        stage('Docker push to registry'){
+            when { expression { currentBuild.result == null } }
+            steps {
+                script {
+                    def dockerTag = "${env.USERNAME}/${env.DOCKER_IMAGE}:${env.GIT_COMMIT_SHA}"
+                    dockerPush(dockerTag)
+                }
+            }
+        }
         stage('Aks deployer Dev') {
             steps {
                 script {
 
-                    def dockerImage = ""
-                    def imageTag = ""
+                    def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
+                    def imageTag = "${env.GIT_COMMIT_SHA}"
                     def PIPELINE_FILE = "${env.PIPELINE_FILE}"
                     AKSdeployer('dev', 'credentials',dockerImage, imageTag, PIPELINE_FILE)
                 }
@@ -166,8 +166,8 @@ stages {
                        )
 
                        if (userInput) {
-                               def dockerImage = ""
-                               def imageTag = ""
+                               def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
+                               def imageTag = "${env.GIT_COMMIT_SHA}"
                                def PIPELINE_FILE = "${env.PIPELINE_FILE}"
                                AKSdeployer('prod', 'credentials',dockerImage, imageTag, PIPELINE_FILE)
                        }
