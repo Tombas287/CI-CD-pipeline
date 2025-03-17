@@ -36,7 +36,8 @@ def call(String environment, String credentials, String dockerImage, String imag
                     
                     // resourceQuota("my-quota", environment)
                     def releaseName = "my-app-release-${environment}-myrelease"
-                    blueGreenDeployment.deploymentScale(releaseName, environment, pipeline, credentials)   
+                    // blueGreenDeployment.deploymentScale(releaseName, environment, pipeline, credentials)   
+                    deploymentScale(releaseName, environment, pipeline, KUBECONFIG)
                     // deploymentScale(String releaseName, String namespace, String pipeline, String credentialsId)
                     // // blueGreenDeployment(releaseName, environment, pipeline)
                     // deploymentScale(releaseName, environment, pipeline)
@@ -49,7 +50,8 @@ def call(String environment, String credentials, String dockerImage, String imag
                     deploy(environment, finalImage, finalTag)
                     def releaseName = "my-app-release-${environment}-myrelease"
                     // blueGreenDeployment.deploymentScale(releaseName, environment, pipeline)  
-                    blueGreenDeployment.deploymentScale(releaseName, environment, pipeline, credentials)   
+                    // blueGreenDeployment.deploymentScale(releaseName, environment, pipeline, credentials)   
+                    deploymentScale(releaseName, environment, pipeline, KUBECONFIG)
                     sleep(time: 30, unit: 'SECONDS')                                                       
                 } else {
                     echo "🚀 Image not found. Proceeding with alternative flow..."
@@ -120,7 +122,7 @@ def fetchImage(String pipeline) {
 //     deploymentScale(releaseName, namespace, pipeline)
 // }
 
-def deploymentScale(String releaseName, String namespace, String pipeline) {
+def deploymentScale(String releaseName, String namespace, String pipeline, String kubeconfigPath) {
     try {
         def jsonContent = readFile(pipeline).trim()
         def jsonData = new JsonSlurperClassic().parseText(jsonContent)
@@ -138,8 +140,12 @@ def deploymentScale(String releaseName, String namespace, String pipeline) {
         //     script: "kubectl get deployment ${releaseName} -n ${namespace} -o jsonpath='{.spec.replicas}'",
         //     returnStdout: true
         // ).trim()
+        
         def currentReplicas = sh(
-            script: "kubectl get deployment ${releaseName} -n ${namespace} -o json | jq -r '.spec.replicas'",
+            script: """
+            export KUBECONFIG=${kubeconfigPath}
+            kubectl get deployment ${releaseName} -n ${namespace} -o json | jq -r '.spec.replicas',
+            """
             returnStdout: true
         ).trim()
 
