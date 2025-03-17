@@ -1,3 +1,5 @@
+{{-if .Values.resourceQuota.enabled }}
+
 apiVersion: v1
 kind: ResourceQuota
 metadata:
@@ -9,3 +11,5 @@ spec:
     requests.memory: "{{ .Values.resourceQuota.hard.requests.memory | default "1Gi" }}"
     limits.cpu: "{{ .Values.resourceQuota.hard.limits.cpu | default "2" }}"
     limits.memory: "{{ .Values.resourceQuota.hard.limits.memory | default "2Gi" }}"
+
+{{-end }}
