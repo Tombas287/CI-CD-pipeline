@@ -6,7 +6,7 @@ pipeline {
         DOCKER_IMAGE = 'myapp'
         DOCKER_HOST = "unix:///var/run/docker.sock"
         PATH = "/opt/homebrew/bin:/usr/local/bin:$PATH"
-        USERNAME = "7002370412"
+        USERNAME = ""
         ENVIRONMENT = 'dev'   
         PIPELINE_FILE = "${env.WORKSPACE}/pipeline.json"
         GIT_COMMIT_SHA = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
@@ -128,19 +128,19 @@ stages {
             cleanWs()
 
             echo "Job success"
-            // emailext (
-            //     to: 'mintu2831@gmail.com',
-            //     subject: "✅ Build Successful",
-            //     body: "Job: ${env.JOB_NAME}\nBuild: ${env.BUILD_NUMBER}"
-            // )
+            emailext (
+                to: '',
+                subject: "✅ Build Successful",
+                body: "Job: ${env.JOB_NAME}\nBuild: ${env.BUILD_NUMBER}"
+            )
         }
-//         failure {
-//              echo "Build failed"
-//             // emailext (
-//             //     to: 'mintu2831@gmail.com',
-//             //     subject: "Jenkins Pipeline Failed! 🔥",
-//             //     body: "Job: ${env.JOB_NAME}\nBuild: ${env.BUILD_NUMBER}\nStatus: ❌ Failed"
-//             // )
-//         }
+        failure {
+             echo "Build failed"
+            emailext (
+                to: '',
+                subject: "Jenkins Pipeline Failed! 🔥",
+                body: "Job: ${env.JOB_NAME}\nBuild: ${env.BUILD_NUMBER}\nStatus: ❌ Failed"
+            )
+        }
     }
 }
