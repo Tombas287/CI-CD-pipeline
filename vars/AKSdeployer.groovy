@@ -14,11 +14,11 @@ def call(String environment, String credentials, String dockerImage, String imag
             kubectl config get-contexts
             helm version
             """            
-            def releaseName1 = "my-app-release-${environment}-myrelease"
-            def sample = sh(script: "kubectl get deployment ${releaseName1} -n ${environment} -o=jsonpath='{.spec.replicas}'", 
-                        returnStdout: true).trim()
+            // def releaseName1 = "my-app-release-${environment}-myrelease"
+            // def sample = sh(script: "kubectl get deployment ${releaseName1} -n ${environment} -o=jsonpath='{.spec.replicas}'", 
+            //             returnStdout: true).trim()
         
-            echo "sample: ${sample}"
+            // echo "sample: ${sample}"
             // Fetch image details from the JSON pipeline file
             def fetchedImage = fetchImage(pipeline)
             def finalImage = dockerImage ?: fetchedImage.finalImage
@@ -145,10 +145,8 @@ def deploymentScale(String releaseName, String namespace, String pipeline, Strin
             script: """
             export KUBECONFIG=${kubeconfigPath}
             kubectl get deployment ${releaseName} -n ${namespace} -o json | jq -r '.spec.replicas',
-            """
-            returnStdout: true
-        ).trim()
-
+            returnStdout: true).trim()
+            """            
         echo "Current Replicas: ${currentReplicas}"
 
         currentReplicas = currentReplicas.toInteger()
