@@ -125,50 +125,48 @@ def fetchImage(String pipeline) {
 
 def deploymentScale(String releaseName, String namespace, String pipeline) {
     try {      
-            sh """
-            export KUBECONFIG=\$KUBECONFIG
-            kubectl config current-context
-            kubectl config get-contexts
-            """
-            def jsonContent = readFile(pipeline).trim()
-            def jsonData = new JsonSlurperClassic().parseText(jsonContent)
+        sh """
+        export KUBECONFIG=\$KUBECONFIG
+        kubectl config current-context
+        kubectl get contexts
+        """
 
-            def scaleUpEnabled = jsonData?.scale_up?.enabled ?: false
-            def scaleDownEnabled = jsonData?.scale_down?.enabled ?: false
-            def minReplicas = jsonData?.min_replicas ?: 1
-            def maxReplicas = jsonData?.scale_up?.max_replicas ?: 3
+        def jsonContent = readFile(pipeline).trim()
+        def jsonData = new JsonSlurperClassic().parseText(jsonContent)
 
-            if (scaleUpEnabled && scaleDownEnabled) {
-                error "❌ Both scale-up and scale-down are enabled. Aborting!"
-            }
+        def scaleUpEnabled = jsonData?.scale_up?.enabled ?: false
+        def scaleDownEnabled = jsonData?.scale_down?.enabled ?: false
+        def minReplicas = jsonData?.min_replicas ?: 1
+        def maxReplicas = jsonData?.scale_up?.max_replicas ?: 3
 
-            // def currentReplicas = sh(
-            //     script: "kubectl get deployment ${releaseName} -n ${namespace} -o jsonpath='{.spec.replicas}'",
-            //     returnStdout: true
-            // ).trim()
-            
-            def currentReplicas = sh(
-                script: "kubectl get deployment ${releaseName} -n ${namespace} -o=jsonpath='{.spec.replicas}'",
-                returnStdout: true
-            ).trim()
+        if (scaleUpEnabled && scaleDownEnabled) {
+            error "❌ Both scale-up and scale-down are enabled. Aborting!"
+        }
 
-            echo "Current Replicas: ${currentReplicas}"
+        sleep(time: 10, unit: 'SECONDS') // Add delay to get updated status
 
-            currentReplicas = currentReplicas.toInteger()
-            def newReplicas = currentReplicas
-    
-            if (scaleUpEnabled && currentReplicas < maxReplicas) {
-                newReplicas = currentReplicas + 1
-                echo "Scaling up to ${newReplicas} replicas..."
-            } else if (scaleDownEnabled && currentReplicas > minReplicas) {
-                newReplicas = currentReplicas - 1
-                echo "Scaling down to ${newReplicas} replicas..."
-            } else {
-                echo "No scaling action needed."
-                return
-            }
+        def currentReplicas = sh(
+            script: "kubectl get deployment ${releaseName} -n ${namespace} -o=jsonpath='{.status.replicas}'",
+            returnStdout: true
+        ).trim()
 
-            sh "kubectl scale deployment ${releaseName} -n ${namespace} --replicas=${newReplicas}"       
+        echo "Current Replicas: ${currentReplicas}"
+
+        currentReplicas = currentReplicas ? currentReplicas.toInteger() : 0
+        def newReplicas = currentReplicas
+
+        if (scaleUpEnabled && currentReplicas < maxReplicas) {
+            newReplicas = currentReplicas + 1
+            echo "Scaling up to ${newReplicas} replicas..."
+        } else if (scaleDownEnabled && currentReplicas > minReplicas) {
+            newReplicas = currentReplicas - 1
+            echo "Scaling down to ${newReplicas} replicas..."
+        } else {
+            echo "No scaling action needed."
+            return
+        }
+
+        sh "kubectl scale deployment ${releaseName} -n ${namespace} --replicas=${newReplicas}"
 
     } catch (Exception e) {
         error "❌ Error in scaling: ${e.getMessage()}"
