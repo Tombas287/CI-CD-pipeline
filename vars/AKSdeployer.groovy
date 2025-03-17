@@ -37,7 +37,7 @@ def call(String environment, String credentials, String dockerImage, String imag
                     // resourceQuota("my-quota", environment)
                     def releaseName = "my-app-release-${environment}-myrelease"
                     // blueGreenDeployment.deploymentScale(releaseName, environment, pipeline, credentials)   
-                    deploymentScale(releaseName, environment, pipeline, env.KUBECONFIG)
+                    deploymentScale(releaseName, environment, pipeline, credentials)
                     // deploymentScale(String releaseName, String namespace, String pipeline, String credentialsId)
                     // // blueGreenDeployment(releaseName, environment, pipeline)
                     // deploymentScale(releaseName, environment, pipeline)
@@ -51,7 +51,7 @@ def call(String environment, String credentials, String dockerImage, String imag
                     def releaseName = "my-app-release-${environment}-myrelease"
                     // blueGreenDeployment.deploymentScale(releaseName, environment, pipeline)  
                     // blueGreenDeployment.deploymentScale(releaseName, environment, pipeline, credentials)   
-                    deploymentScale(releaseName, environment, pipeline, env.KUBECONFIG)
+                    deploymentScale(releaseName, environment, pipeline, credentials)
                     sleep(time: 30, unit: 'SECONDS')                                                       
                 } else {
                     echo "🚀 Image not found. Proceeding with alternative flow..."
@@ -122,47 +122,57 @@ def fetchImage(String pipeline) {
 //     deploymentScale(releaseName, namespace, pipeline)
 // }
 
-def deploymentScale(String releaseName, String namespace, String pipeline, String kubeconfigPath) {
+def deploymentScale(String releaseName, String namespace, String pipeline, String credentials) {
     try {
-        def jsonContent = readFile(pipeline).trim()
-        def jsonData = new JsonSlurperClassic().parseText(jsonContent)
-
-        def scaleUpEnabled = jsonData?.scale_up?.enabled ?: false
-        def scaleDownEnabled = jsonData?.scale_down?.enabled ?: false
-        def minReplicas = jsonData?.min_replicas ?: 1
-        def maxReplicas = jsonData?.scale_up?.max_replicas ?: 3
-
-        if (scaleUpEnabled && scaleDownEnabled) {
-            error "❌ Both scale-up and scale-down are enabled. Aborting!"
+        withCredentials([file(credentialsId: credentials, variable: 'KUBECONFIG')]) {
+        script {
+            echo "✅ Setting KUBECONFIG..."
+            sh """
+            export KUBECONFIG=\$KUBECONFIG
+            kubectl config current-context
+            kubectl config get-contexts
+            
+            def jsonContent = readFile(pipeline).trim()
+            def jsonData = new JsonSlurperClassic().parseText(jsonContent)
+    
+            def scaleUpEnabled = jsonData?.scale_up?.enabled ?: false
+            def scaleDownEnabled = jsonData?.scale_down?.enabled ?: false
+            def minReplicas = jsonData?.min_replicas ?: 1
+            def maxReplicas = jsonData?.scale_up?.max_replicas ?: 3
+    
+            if (scaleUpEnabled && scaleDownEnabled) {
+                error "❌ Both scale-up and scale-down are enabled. Aborting!"
+            }
+    
+            // def currentReplicas = sh(
+            //     script: "kubectl get deployment ${releaseName} -n ${namespace} -o jsonpath='{.spec.replicas}'",
+            //     returnStdout: true
+            // ).trim()
+            
+            def currentReplicas = sh(
+                script: "kubectl get deployment ${releaseName} -n ${namespace} -o=jsonpath='{.spec.replicas}'",
+                returnStdout: true
+            ).trim()
+    
+            echo "Current Replicas: ${currentReplicas}"
+    
+            currentReplicas = currentReplicas.toInteger()
+            def newReplicas = currentReplicas
+    
+            if (scaleUpEnabled && currentReplicas < maxReplicas) {
+                newReplicas = currentReplicas + 1
+                echo "Scaling up to ${newReplicas} replicas..."
+            } else if (scaleDownEnabled && currentReplicas > minReplicas) {
+                newReplicas = currentReplicas - 1
+                echo "Scaling down to ${newReplicas} replicas..."
+            } else {
+                echo "No scaling action needed."
+                return
+            }
+    
+            sh "kubectl scale deployment ${releaseName} -n ${namespace} --replicas=${newReplicas}"
         }
-
-        // def currentReplicas = sh(
-        //     script: "kubectl get deployment ${releaseName} -n ${namespace} -o jsonpath='{.spec.replicas}'",
-        //     returnStdout: true
-        // ).trim()
-        
-        def currentReplicas = sh(
-            script: "kubectl --kubeconfig=${kubeconfigPath} get deployment ${releaseName} -n ${namespace} -o=jsonpath='{.spec.replicas}'",
-            returnStdout: true
-        ).trim()
-
-        echo "Current Replicas: ${currentReplicas}"
-
-        currentReplicas = currentReplicas.toInteger()
-        def newReplicas = currentReplicas
-
-        if (scaleUpEnabled && currentReplicas < maxReplicas) {
-            newReplicas = currentReplicas + 1
-            echo "Scaling up to ${newReplicas} replicas..."
-        } else if (scaleDownEnabled && currentReplicas > minReplicas) {
-            newReplicas = currentReplicas - 1
-            echo "Scaling down to ${newReplicas} replicas..."
-        } else {
-            echo "No scaling action needed."
-            return
-        }
-
-        sh "kubectl scale deployment ${releaseName} -n ${namespace} --replicas=${newReplicas}"
+    }
 
     } catch (Exception e) {
         error "❌ Error in scaling: ${e.getMessage()}"
