@@ -2,13 +2,6 @@
 
 pipeline {
     agent any
-    // agent {
-    //      docker {
-    //   image 'abhishekf5/maven-abhishek-docker-agent:v1'
-    //   args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
-    // }     
-// }
-
     environment {
         DOCKER_IMAGE = 'myapp'
         DOCKER_HOST = "unix:///var/run/docker.sock"
@@ -21,27 +14,10 @@ pipeline {
 
     }
 stages {
-    // stage('Sample text') {
-    //         steps {
-    //             script {
-    //                def jsonFilePath = "pipeline.json"
-    //                sampleText(jsonFilePath)
-
-                    
-    //                 // def dockerDetails = sampleText.getDockerDetails(jsonFilePath)
-    //                 // echo "Docker Image: ${dockerDetails.image}"
-    //                 // echo "Docker Tag: ${dockerDetails.tag}"
-    //             }
-    //         }
-    //     }
-
-       // stage('Set Commit SHA') {
-        //     steps {
-        //         script {
-        //             env.GIT_COMMIT_SHA = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-        //         }
-       //      }
-      //   }
+         stage('Checkout') {
+            steps {
+                checkout scm
+            }
          stage('Pip Builder'){
              steps {
                  script {
@@ -53,41 +29,13 @@ stages {
                 }
             }
          }
-
-        stage('SonarQube Analysis') {
+         stage('SonarQube Analysis') {
             steps {
                 script {
                     sonarScan(projectKey: 'my_local_project', sonarHost: 'http://host.docker.internal:9000')
                 }
             }
         }
-        // stage('check if image exist'){
-
-        //     steps {
-
-        //         script {
-        //             def dockerImage = "${env.USERNAME}/${env.DOCKER_IMAGE}"
-        //             def imageTag = "${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}"
-        //             // def dockerImage = "7002370412/nginx"
-        //             // def imageTag = "latest"
-
-        //             def exist = imageExist(dockerImage, imageTag)
-        //             if (exist) {
-        //                 echo "Skipping build because image already exists."
-        //                 currentBuild.result = 'SUCCESS'
-        //                 return
-        //             } else {
-        //                 echo "No existing image found. Proceeding with build."
-        //             }
-
-
-        //             }
-
-        //         }
-
-
-        //     }
-
         stage('Build and Tag Docker Image') {
             when { expression { currentBuild.result == null } }
              steps {
@@ -126,15 +74,6 @@ stages {
                 }
             }
         }
-        // stage('Blue green deployment') {
-
-        // steps {
-            
-        //     blueGreenDeployment('dev', 'credentials', "${env.PIPELINE_FILE}")
-        //   }           
-            
-        // }
-
         // stage('Aks deployer qa') {
         //     steps {
         //         script {
@@ -172,8 +111,8 @@ stages {
                                AKSdeployer('prod', 'credentials',dockerImage, imageTag, PIPELINE_FILE)
                        }
                        else {
-                          error("Deployment aborted by user.")
-                       }
+                         error("Deployment aborted by user.")
+                      }
                }
            }
         }
