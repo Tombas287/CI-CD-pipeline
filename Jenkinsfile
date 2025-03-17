@@ -135,28 +135,28 @@ stages {
             
         // }
 
-        stage('Aks deployer qa') {
-            steps {
-                script {
+        // stage('Aks deployer qa') {
+        //     steps {
+        //         script {
 
-                    def dockerImage = ""
-                    def imageTag = ""
-                    def PIPELINE_FILE = "${env.PIPELINE_FILE}"
-                    AKSdeployer('qa', 'credentials',dockerImage, imageTag,PIPELINE_FILE)
-                }
-            }
-        }
-        stage('Aks deployer preprod') {
-            steps {
-                script {
+        //             def dockerImage = ""
+        //             def imageTag = ""
+        //             def PIPELINE_FILE = "${env.PIPELINE_FILE}"
+        //             AKSdeployer('qa', 'credentials',dockerImage, imageTag,PIPELINE_FILE)
+        //         }
+        //     }
+        // }
+        // stage('Aks deployer preprod') {
+        //     steps {
+        //         script {
 
-                    def dockerImage = ""
-                    def imageTag = ""
-                    def PIPELINE_FILE = "${env.PIPELINE_FILE}"
-                    AKSdeployer('preprod', 'credentials',dockerImage, imageTag,PIPELINE_FILE)
-                }
-            }
-        }
+        //             def dockerImage = ""
+        //             def imageTag = ""
+        //             def PIPELINE_FILE = "${env.PIPELINE_FILE}"
+        //             AKSdeployer('preprod', 'credentials',dockerImage, imageTag,PIPELINE_FILE)
+        //         }
+        //     }
+        // }
         stage('Aks deployer prod') {
             steps {
                 script {
