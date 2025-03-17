@@ -3,6 +3,17 @@ CI-CD Jenkins automation:-
 ![CI_CD Process Flowchart](https://github.com/user-attachments/assets/bbc6c644-473d-4751-8eae-3617d75b402c)
 
 This project involves building, testing, and deploying a Dockerized application using Jenkins. The project uses Groovy for scripting, Python for dependencies, and JSON for configuration.  
+
+SETUP INFRASTRUCTURE: 
+
+Using terraform module, we create AKS cluster and as well linux vm( with custom script jenkins.sh to install jenkins, docker and give permission to jenkins and user) to  at one click 
+commands to include:-
+
+terraform init 
+terraform plan 
+terraform validate 
+terraform apply --auto-approve 
+
 pipeline.json
 The pipeline.json file contains configuration details for the deployment pipeline, such as the Docker image name, tag, and scaling options. This file is crucial for defining how the application should be deployed and scaled in different environments.
 Jenkinsfile Steps
