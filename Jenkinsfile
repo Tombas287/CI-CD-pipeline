@@ -54,13 +54,13 @@ stages {
          //    }
          // }
 
-        // stage('SonarQube Analysis') {
-        //     steps {
-        //         script {
-        //             sonarScan(projectKey: 'my_local_project', sonarHost: 'http://host.docker.internal:9000')
-        //         }
-        //     }
-        // }
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    sonarScan(projectKey: 'my_local_project', sonarHost: 'http://host.docker.internal:9000')
+                }
+            }
+        }
         // stage('check if image exist'){
 
         //     steps {
