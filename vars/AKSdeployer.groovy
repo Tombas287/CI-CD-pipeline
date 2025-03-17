@@ -128,7 +128,7 @@ def deploymentScale(String releaseName, String namespace, String pipeline) {
         sh """
         export KUBECONFIG=\$KUBECONFIG
         kubectl config current-context
-        kubectl get contexts
+        kubectl config get-contexts
         """
 
         def jsonContent = readFile(pipeline).trim()
