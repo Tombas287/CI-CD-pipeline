@@ -27,7 +27,7 @@ def call(Map config = [:]) {
                 -Dsonar.exclusions="**/node_modules/**, **/tests/**, **/*.spec.js, **/*.min.js, **/build/**" \
                 -Dsonar.sources=. \
                 -Dsonar.host.url=${sonarHost} \
-                -Dsonar.login=\$SONAR_TOKEN \
+                -Dsonar.login=\${SONAR_TOKEN} \
                 -Dsonar.scm.disabled=true \
                 -Dsonar.verbose=true
             """
