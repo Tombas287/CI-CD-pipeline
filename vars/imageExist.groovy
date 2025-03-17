@@ -1,7 +1,5 @@
 def call(String dockerImage, String imageTag){
-    // ${env.ENVIRONMENT}-${env.GIT_COMMIT_SHA}
-
-    def imageExist = false
+  def imageExist = false
     try {
 
         def status = sh(script: "curl -s -f https://hub.docker.com/v2/repositories/${dockerImage}/tags/${imageTag}", returnStatus: true)
