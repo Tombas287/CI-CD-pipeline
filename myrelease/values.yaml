@@ -108,14 +108,15 @@ volumeMounts: []
 #  htmlContent: "Hello World from Helm!"   # 👈 Custom HTML message
 
 
-resourceQuota: []
-  # hard:
-  #   requests:
-  #     cpu: "2"  # Increase CPU limit
-  #     memory: "2Gi"  # Increase memory limit
-  #   limits:
-  #     cpu: "4"
-  #     memory: "4Gi"
+resourceQuota: 
+  enabled: false
+  hard:
+    requests:
+      cpu: "2"  # Increase CPU limit
+      memory: "2Gi"  # Increase memory limit
+    limits:
+      cpu: "4"
+      memory: "4Gi"
 
 
 nodeSelector: {}
