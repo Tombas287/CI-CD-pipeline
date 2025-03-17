@@ -144,9 +144,9 @@ def deploymentScale(String releaseName, String namespace, String pipeline, Strin
         def currentReplicas = sh(
             script: """
             export KUBECONFIG=${kubeconfigPath}
-            kubectl get deployment ${releaseName} -n ${namespace} -o json | jq -r '.spec.replicas',
+            kubectl get deployment ${releaseName} -n ${namespace} -o json | jq -r '.spec.replicas',            
+            """,
             returnStdout: true).trim()
-            """            
         echo "Current Replicas: ${currentReplicas}"
 
         currentReplicas = currentReplicas.toInteger()
