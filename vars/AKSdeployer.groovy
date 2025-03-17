@@ -37,7 +37,7 @@ def call(String environment, String credentials, String dockerImage, String imag
                     // resourceQuota("my-quota", environment)
                     def releaseName = "my-app-release-${environment}-myrelease"
                     // blueGreenDeployment.deploymentScale(releaseName, environment, pipeline, credentials)   
-                    deploymentScale(releaseName, environment, pipeline, KUBECONFIG)
+                    deploymentScale(releaseName, environment, pipeline, env.KUBECONFIG)
                     // deploymentScale(String releaseName, String namespace, String pipeline, String credentialsId)
                     // // blueGreenDeployment(releaseName, environment, pipeline)
                     // deploymentScale(releaseName, environment, pipeline)
@@ -51,7 +51,7 @@ def call(String environment, String credentials, String dockerImage, String imag
                     def releaseName = "my-app-release-${environment}-myrelease"
                     // blueGreenDeployment.deploymentScale(releaseName, environment, pipeline)  
                     // blueGreenDeployment.deploymentScale(releaseName, environment, pipeline, credentials)   
-                    deploymentScale(releaseName, environment, pipeline, KUBECONFIG)
+                    deploymentScale(releaseName, environment, pipeline, env.KUBECONFIG)
                     sleep(time: 30, unit: 'SECONDS')                                                       
                 } else {
                     echo "🚀 Image not found. Proceeding with alternative flow..."
